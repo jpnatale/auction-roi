@@ -1,0 +1,48 @@
+
+module.exports = function(){
+	var items = {
+		"124105": {"itemName":"Starlight Rose","costToBuy":0},
+		"124101": {"itemName":"Aethril","costToBuy":0},
+		"124102": {"itemName":"Dreamleaf","costToBuy":0},
+		"124104": {"itemName":"Fjarnskaggl","costToBuy":0},
+		"124103": {"itemName":"Foxflower","costToBuy":0},
+		"142117": {"itemName":"Blood of Sargeras (10x Prolonged Power)","costToBuy":0},
+		"124442": {"itemName":"Chaos Crystal","costToBuy":0},
+		"124441": {"itemName":"Leylight Shard","costToBuy":0},
+		"124440": {"itemName":"Arkhana","costToBuy":0},
+		"124444": {"itemName":"Infernal Brimstone","costToBuy":0},
+		"124106": {"itemName":"Felwort","costToBuy":0},
+		"127850": {"itemName":"Flask of Ten Thousand Scars","costToBuy":0,"costToMake":1000000,"profit":0,"roi":0,"mats":{"124105":7,
+						"124101":10,
+						"124102":10},"isBestProfit":0,"isBestRoi":0},
+		"127849": {"itemName":"Flask of the Countless Armies","costToBuy":0,"costToMake":1000000,"profit":0,"roi":0,"mats":{"124105":7,
+						"124101":10,
+						"124103":10},"isBestProfit":0,"isBestRoi":0},
+		"127848": {"itemName":"Flask of the Sevent Demon","costToBuy":0,"costToMake":1000000,"profit":0,"roi":0,"mats":{"124105":7,
+						"124104":10,
+						"124103":10},"isBestProfit":0,"isBestRoi":0},
+		"127847": {"itemName":"Flask of the Whispered Pack","costToBuy":0,"costToMake":1000000,"profit":0,"roi":0,"mats":{"124105":7,
+						"124104":10,
+						"124102":10},"isBestProfit":0,"isBestRoi":0},
+		"127842": {"itemName":"Infernal Alchemist Stone","costToBuy":0,"costToMake":1000000,"profit":0,"roi":0,"mats":{"142117":30,
+					"124106":5,
+					"124444":1},"isBestProfit":0,"isBestRoi":0},
+		"128542": {"itemName":"Ring: Binding of Haste","costToBuy":0,"costToMake":1000000,"profit":0,"roi":0,"mats":{"124442":4,
+					"124440":50},"isBestProfit":0,"isBestRoi":0},
+		"128543": {"itemName":"Ring: Binding of Mastery","costToBuy":0,"costToMake":1000000,"profit":0,"roi":0,"mats":{"124442":4,
+					"124440":50},"isBestProfit":0,"isBestRoi":0},
+		"128541": {"itemName":"Ring: Binding of Critical Strike","costToBuy":0,"costToMake":1000000,"profit":0,"roi":0,"mats":{"124442":4,
+					"124440":50},"isBestProfit":0,"isBestRoi":0},
+		"128548": {"itemName":"Cloak: Binding of Strength","costToBuy":0,"costToMake":1000000,"profit":0,"roi":0,"mats":{"142117":20,
+					"124442":8,
+					"124440":30},"isBestProfit":0,"isBestRoi":0},
+		"128550": {"itemName":"Cloak: Binding of Intellect","costToBuy":0,"costToMake":1000000,"profit":0,"roi":0,"mats":{"142117":20,
+					"124442":8,
+					"124440":30},"isBestProfit":0,"isBestRoi":0},
+		"128549": {"itemName":"Cloak: Binding of Agilty","costToBuy":0,"costToMake":1000000,"profit":0,"roi":0,"mats":{"142117":20,
+					"124442":8,
+					"124440":30},"isBestProfit":0,"isBestRoi":0}}
+
+	return items
+
+}

@@ -1,0 +1,20 @@
+{
+  "name": "auction-roi",
+  "version": "1.0.0",
+  "description": "",
+  "main": "AHData.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jpnatale/auction-roi.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jpnatale/auction-roi/issues"
+  },
+  "homepage": "https://github.com/jpnatale/auction-roi#readme"
+}
