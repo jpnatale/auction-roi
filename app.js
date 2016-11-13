@@ -1,21 +1,10 @@
 var ahurl = require("./AHURL.js")
 var ahData = require("./AHData.js")
 var items = require("./items.js")()
-var schedule = require('node-schedule');
-var fs = require('fs')
-var jsonfile = require('jsonfile')
 
 var express = require('express')
 var app = express()
 var PORT = process.env.PORT || 3000
-
-
-
-
-// app.get('/', function (req, res){
-// 	res.send("test")
-// })//
-
 
 var costKeys = []
 var allItems = Object.keys(items)
@@ -31,28 +20,17 @@ var maxProfitKey = ""
 exports.pullData = function(){
 
 return new Promise(function(resolve,reject){
-//
+
 ahurl().then(function(dataURLRes){
-	// console.log(' ')
-	// console.log("Got Auction House URL.")
-	// console.log(" ")
 
 	return ahData(dataURLRes.files[0].url)
 
 }).then(function(data){
 
-
-	// console.log('Retrieved Auction House Data.')
-	// console.log(' ')
-	// console.log('Current Prices on the Auction House:')
-	// console.log(' ')
 	for (var i = 0, len = allItems.length; i < len; i++) {
-		
-		// var foundUnit = findUnit(data,Object.keys(items)[i])
+
 		items[allItems[i]].costToBuy = findUnit(data,allItems[i])
-		//  itemName = itemsToGet[itemIDs[i]]
-		// unitPrices[itemIDs[i]] = foundUnit 
-		// console.log(itemName +" - " + foundUnit)
+
 	}
 
  }).then(function(){
@@ -67,14 +45,9 @@ console.log("out")
 
  })
 
-
 }
 
-//
-
 )}
-
-
 
 function findUnit (data,itemID){
 
@@ -108,13 +81,10 @@ else if(matches.length>5){
 
 return finalUnit
 
-
 }
 
 function bestROI(){
-	// console.log(' ')
-	// console.log('Maximum ROI is for Making:')
-	// console.log(' ')
+
 var maxRoi = 0
 
 
@@ -126,11 +96,6 @@ for (var i = 0, len = costKeys.length; i < len; i++) {
 	}
 
 items[maxRoiKey].isBestRoi = 1
-
-// console.log(items()[0][maxroikey] +", for a profit of " + Math.round(profits[maxroikey]) + " and an ROI of "+ maxroi+".") 
-// 	console.log(' ')
-// 	console.log('Maximum Profit is for Making:')
-// 	console.log(' ')
 
 var maxProfit = 0
 
@@ -145,19 +110,9 @@ for (var i = 0, len = costKeys.length; i < len; i++) {
 
 items[maxProfitKey].isBestProfit = 1
 
-// console.log(items()[0][maxProfitKey] +", for a profit of " + Math.round(profits[maxProfitKey]) + " and an ROI of "+ roi[maxProfitKey]+".") 
-
-
-
 }
 
-
-
-
 function getCost(){
-
-
-
 
 	for (var i = 0, len = costKeys.length; i < len; i++) {
 	
@@ -176,26 +131,8 @@ function getCost(){
 		
 		items[costKeys[i]].roi = Math.round(100*items[costKeys[i]].profit/items[costKeys[i]].costToMake)
 
-
 	}
 
 	return bestROI()
 
-
 }
-
-
-
-
-
-
-
-
-
-
-
-// app.listen(PORT, function(){
-
-// 	console.log("Express server listening on port " + PORT +"!")
-
-// })

@@ -16,5 +16,9 @@
   "bugs": {
     "url": "https://github.com/jpnatale/auction-roi/issues"
   },
-  "homepage": "https://github.com/jpnatale/auction-roi#readme"
+  "homepage": "https://github.com/jpnatale/auction-roi#readme",
+  "dependencies": {
+    "express": "^4.14.0",
+    "request": "^2.78.0"
+  }
 }
