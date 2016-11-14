@@ -42,7 +42,7 @@ ahurl().then(function(dataURLRes){
  	var out = { 'allData':items,'bestChoice':
 
 
- 		{"ROI":String(items[maxRoiKey].itemName+ " - "+items[maxRoiKey].roi),"Profit":String(items[maxProfitKey].itemName+ " - "+Math.round(items[maxProfitKey].profit))}
+ 		{"ROI":String(items[maxRoiKey].itemName+ " - "+items[maxRoiKey].roi),"Profit":String(items[maxProfitKey].itemName+ " - "+Math.round(items[maxProfitKey].profit))}}
 
 
 
@@ -136,6 +136,8 @@ function getCost(){
 		items[costKeys[i]].profit = 0.95*items[costKeys[i]].costToBuy-items[costKeys[i]].costToMake
 		
 		items[costKeys[i]].roi = Math.round(100*items[costKeys[i]].profit/items[costKeys[i]].costToMake)
+
+		items[costKeys[i]].profit = Math.round(items[costKeys[i]].profit)
 
 	}
 
