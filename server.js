@@ -17,18 +17,18 @@ if (allItems.length>0){
 			allItems.forEach(function(item){
 
 				var exists = {}
-				db.items.findAll({
+				db.items.findOne({
 							where: {
 								itemId:item,
 							}
 						}).then(function(itemFound){
 
-				if (itemFound[0].dataValues.hasOwnProperty('itemId')){
-					console.log('Database already contained item: ' + item)
+				if (itemFound){
+					console.log('Database already contained item: ' + item + ' - '+ itemsOG[item].itemName)
 					
 			 	} else {
 
-			 		console.log('Item not yet in database. Creating entry for item: '+ item)
+			 		console.log('Item not yet in database. Creating entry for item: '+ item + ' - '+ itemsOG[item].itemName)
 
 				var body = {
 					'itemId' : item,
@@ -55,8 +55,11 @@ if (allItems.length>0){
 			
 		} 
 
+
+
+
 	pullData.pullData().then(function(out){
-		console.log('test')
+
 		var allData = out.allData
 
 		allItems.forEach(function(item){
@@ -70,17 +73,25 @@ if (allItems.length>0){
 					'roi' : allData[item].roi,
 					'mats' : String(allData[item].mats)
 				}
+				
 
-				db.items.findAll({where:{itemId:item}}).then(function(itemFound){
+				db.items.findOne({
+					where:{
+						itemId:item}
+
+					}).then(function(itemFound){
+
 					return itemFound.update(body)
-				},function (e){
-					res.status(404).send()
-				}, function(){
-					res.status(500).send()
+					console.log('here1 ' + body.itemId)
 
+				},function (e){
+					
+					res.status(404).send()
+				},function (){
+					res.status(500).send()
 				}).then(function(itemFound){
 					//res.json(itemFound.toJSON())
-					res.json(out.bestChoice)
+					//res.json(out.bestChoice)
 				}, function (e){
 					res.status(400).json(e)
 
@@ -90,18 +101,14 @@ if (allItems.length>0){
 
 
 		})
-			console.log("updated values?")
 
 
+res.json(out.bestChoice)
 
-		
-
-		res.json(String(out.bestChoice))
 	})
 
 
 	
-
 
 
 

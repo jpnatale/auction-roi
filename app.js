@@ -38,6 +38,10 @@ ahurl().then(function(dataURLRes){
  	 getCost()
 
  }).then(function(){
+
+ 	 bestROI()
+
+ }).then(function(){
  
  	var out = { 'allData':items,'bestChoice':
 
@@ -96,12 +100,15 @@ var maxRoi = 0
 
 for (var i = 0, len = costKeys.length; i < len; i++) {
 			if(items[costKeys[i]].roi > maxRoi){
+
 			maxRoiKey = costKeys[i]
+			maxRoi = items[maxRoiKey].roi
+
 		}
 
 	}
 
-items[maxRoiKey].isBestRoi = 1
+
 
 var maxProfit = 0
 
@@ -110,11 +117,12 @@ for (var i = 0, len = costKeys.length; i < len; i++) {
 			if(items[costKeys[i]].profit> maxProfit){
 		
 			maxProfitKey = costKeys[i]
+			maxProfit = items[maxProfitKey].profit
 		}
 
 	}
 
-items[maxProfitKey].isBestProfit = 1
+
 
 }
 
@@ -141,6 +149,6 @@ function getCost(){
 
 	}
 
-	return bestROI()
+	
 
 }
