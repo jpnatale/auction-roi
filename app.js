@@ -39,8 +39,14 @@ ahurl().then(function(dataURLRes){
 
  }).then(function(){
  
- 	var out = {"ROI":String(items[maxRoiKey].itemName+ " - "+items[maxRoiKey].roi),"Profit":String(items[maxProfitKey].itemName+ " - "+Math.round(items[maxProfitKey].profit))}
-console.log("out")
+ 	var out = { 'allData':items,'bestChoice':
+
+
+ 		{"ROI":String(items[maxRoiKey].itemName+ " - "+items[maxRoiKey].roi),"Profit":String(items[maxProfitKey].itemName+ " - "+Math.round(items[maxProfitKey].profit))}
+
+
+
+
  	resolve(out)
 
  })
