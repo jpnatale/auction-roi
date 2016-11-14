@@ -120,7 +120,23 @@ if (allItems.length>0){
 
 		allItems.forEach(function(item){
 
-			var body = {
+			// var body = {
+			// 		'itemId' : item,
+			// 		'itemName' : allData[item].itemName,
+			// 		'costToBuy' : allData[item].costToBuy,
+			// 		'costToMake' : allData[item].costToMake,
+			// 		'profit' : allData[item].profit,
+			// 		'roi' : allData[item].roi,
+			// 		'mats' : String(allData[item].mats)
+			// 	}
+				
+
+				db.items.findOne({
+					where:{
+						itemId:item}
+
+					}).then(function(itemFound){
+						var body = {
 					'itemId' : item,
 					'itemName' : allData[item].itemName,
 					'costToBuy' : allData[item].costToBuy,
@@ -129,16 +145,12 @@ if (allItems.length>0){
 					'roi' : allData[item].roi,
 					'mats' : String(allData[item].mats)
 				}
-				
+					return [itemFound,body]
 
-				db.items.findOne({
-					where:{
-						itemId:item}
-
-					}).then(function(itemFound){
-						console.log('here1 ' + body.itemId)
-
-					return itemFound.update(body)
+					}).then(function(array){
+						
+						console.log(item)
+					return array[0].update(array[1])
 					
 
 				},function (e){
