@@ -9,7 +9,7 @@ var allItems = Object.keys(itemsOG)
 
 
 app.get('/', function (req,res){
-	console.log("Updating best choices:")
+	console.log("Pulling Best Choices:")
 	var maxRoiItem = {}
 	var maxProfitItem = {}
 
@@ -117,18 +117,10 @@ if (allItems.length>0){
 	pullData.pullData().then(function(out){
 
 		var allData = out.allData
-
+console.log("Updating Database:")
 		allItems.forEach(function(item){
 
-				
-
-				db.items.findOne({
-					where:{
-						itemId:item}
-
-					}).then(function(itemFound){
-
-						var body = {
+				db.items.update({
 					'itemId' : item,
 					'itemName' : allData[item].itemName,
 					'costToBuy' : allData[item].costToBuy,
@@ -136,24 +128,40 @@ if (allItems.length>0){
 					'profit' : allData[item].profit,
 					'roi' : allData[item].roi,
 					'mats' : String(allData[item].mats)
-				}
-					return [itemFound,body]
+				},
+				{where: {
+					itemId:item
+				}})
 
-					}).then(function(array){
-						
-						console.log(array[1])
-					return array[0].update(array[1])
-					
+				// db.items.findOne({
+				// 	where:{
+				// 		itemId:item}
 
-				}).then(function(itemUpdated){
-					//res.json(itemUpdated.toJSON())
-					
-				})
+				// 	}).then(function(itemFound){
+
+
+
+
+
+				// 		var body = {
+				// 	'itemId' : item,
+				// 	'itemName' : allData[item].itemName,
+				// 	'costToBuy' : allData[item].costToBuy,
+				// 	'costToMake' : allData[item].costToMake,
+				// 	'profit' : allData[item].profit,
+				// 	'roi' : allData[item].roi,
+				// 	'mats' : String(allData[item].mats)
+				// }
+				// 	return itemFound.updateAttributes(body)
+
+				// 	})
 
 
 
 
 		})
+
+		console.log("Updating Best Choices:")
 
 db.best.findOne({
 					where:{
@@ -161,7 +169,10 @@ db.best.findOne({
 
 					}).then(function(itemFound){
 						if(itemFound){
-							return itemFound.update(out.roiBody)
+
+							db.best.update(out.roiBody,{where:{roiOrProfit:'roi'}})
+
+							//return itemFound.update(out.roiBody)
 						} else {
 							db.best.create(out.roiBody)
 						}
@@ -173,7 +184,10 @@ db.best.findOne({
 
 					}).then(function(itemFound){
 						if(itemFound){
-							return itemFound.update(out.profitBody)
+
+							db.best.update(out.profitBody,{where:{roiOrProfit:'profit'}})
+
+							//return itemFound.update(out.profitBody)
 						} else {
 							db.best.create(out.profitBody)
 						}
