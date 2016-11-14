@@ -15,16 +15,11 @@ if (env === 'production') {
 }
 
 
-var sequelize = new Sequelize(undefined, undefined, undefined, {
-	'dialect':'sqlite',
-	'storage': __dirname +'/data/dev-items-api.sqlite',
-	'logging': false
-})
 
 var db = {}
 
 db.items = sequelize.import(__dirname + "/models/item.js")
-db.best = sequelize.import(__dirname _ "/models/best.js")
+db.best = sequelize.import(__dirname + "/models/best.js")
 db.sequelize = sequelize
 db.Sequelize = Sequelize
 

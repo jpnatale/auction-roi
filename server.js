@@ -9,40 +9,60 @@ var allItems = Object.keys(itemsOG)
 
 
 app.get('/', function (req,res){
+	console.log("Updating best choices:")
 	var maxRoiItem = {}
 	var maxProfitItem = {}
 
-	var maxRoiKey = db.best.findOne({
+	var maxRoiKey = ""
+
+	var maxProfitKey = ""
+
+	db.best.findOne({
 		where: {
 			roiOrProfit:'roi'
 		}
-	})
-
-	var maxProfitKey = db.best.findOne({
-		where: {
-			roiOrProfit:'profit'
-		}
-	})
-
-	db.items.findOne({
-		where: {
-			itemId = maxRoiKey.itemId
-		}
 	}).then(function(foundRoi){
-		maxRoiItem = foundRoi
+		maxRoiKey = foundRoi.dataValues.itemId
+	
+	
+	}).then(function(){
+			db.items.findOne({
+			where: {
+				itemId : maxRoiKey
+			}
+		}).then(function(foundRoi){
+
+			maxRoiItem = foundRoi.dataValues
+
+		}).then(function(){
+
+			db.best.findOne({
+					where: {
+						roiOrProfit:'profit'
+					}
+				}).then(function(foundProfit){
+					maxProfitKey = foundProfit.dataValues.itemId
+				}).then(function(){
+						db.items.findOne({
+								where: {
+									itemId : maxProfitKey
+								}
+							}).then(function(foundProfit){
+								maxProfitItem = foundProfit.dataValues
+							}).then(function(){
+
+								var out = {"ROI":String(maxRoiItem.itemName+ " - "+maxRoiItem.roi),"Profit":String(maxProfitItem.itemName+ " - "+Math.round(maxProfitItem.profit))}
+
+								res.json([out,"Updated at: " + maxRoiItem.updatedAt])
+							})
+				})
+		})
+
 	})
 
-	db.items.findOne({
-		where: {
-			itemId = maxProfitKey.itemId
-		}
-	}).then(function(foundProfit){
-		maxProfitItem = foundProfit
-	})
 
 
 
-	{"ROI":String(maxRoiItem.itemName+ " - "+maxRoiItem.roi),"Profit":String(maxProfitItem.itemName+ " - "+Math.round(maxProfitItem.profit))}}
 
 })
 
@@ -116,9 +136,10 @@ if (allItems.length>0){
 						itemId:item}
 
 					}).then(function(itemFound){
+						console.log('here1 ' + body.itemId)
 
 					return itemFound.update(body)
-					console.log('here1 ' + body.itemId)
+					
 
 				},function (e){
 					
@@ -137,6 +158,30 @@ if (allItems.length>0){
 
 
 		})
+
+db.best.findOne({
+					where:{
+						roiOrProfit:'roi'}
+
+					}).then(function(itemFound){
+						if(itemFound){
+							return itemFound.update(out.roiBody)
+						} else {
+							db.best.create(out.roiBody)
+						}
+					})
+
+db.best.findOne({
+					where:{
+						roiOrProfit:'profit'}
+
+					}).then(function(itemFound){
+						if(itemFound){
+							return itemFound.update(out.profitBody)
+						} else {
+							db.best.create(out.profitBody)
+						}
+					})					
 
 
 res.json(out.bestChoice)
