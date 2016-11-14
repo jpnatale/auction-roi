@@ -24,6 +24,7 @@ var sequelize = new Sequelize(undefined, undefined, undefined, {
 var db = {}
 
 db.items = sequelize.import(__dirname + "/models/item.js")
+db.best = sequelize.import(__dirname _ "/models/best.js")
 db.sequelize = sequelize
 db.Sequelize = Sequelize
 

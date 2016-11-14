@@ -8,9 +8,45 @@ var allItems = Object.keys(itemsOG)
 
 
 
+app.get('/', function (req,res){
+	var maxRoiItem = {}
+	var maxProfitItem = {}
+
+	var maxRoiKey = db.best.findOne({
+		where: {
+			roiOrProfit:'roi'
+		}
+	})
+
+	var maxProfitKey = db.best.findOne({
+		where: {
+			roiOrProfit:'profit'
+		}
+	})
+
+	db.items.findOne({
+		where: {
+			itemId = maxRoiKey.itemId
+		}
+	}).then(function(foundRoi){
+		maxRoiItem = foundRoi
+	})
+
+	db.items.findOne({
+		where: {
+			itemId = maxProfitKey.itemId
+		}
+	}).then(function(foundProfit){
+		maxProfitItem = foundProfit
+	})
 
 
-app.get('/', function (req, res){
+
+	{"ROI":String(maxRoiItem.itemName+ " - "+maxRoiItem.roi),"Profit":String(maxProfitItem.itemName+ " - "+Math.round(maxProfitItem.profit))}}
+
+})
+
+app.get('/update', function (req, res){
 
 
 if (allItems.length>0){
