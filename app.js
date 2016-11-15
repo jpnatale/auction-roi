@@ -14,16 +14,36 @@ var items = {}
 var ogKeys = Object.keys(itemsOG)
 
 
+var maxRoiKey = ""
+var maxProfitKey = ""
 
+exports.pullData = function(){
+
+return new Promise(function(resolve,reject){
+
+/////////////////////////
 
 db.items.findAll().then(function(dbItems){
 
 	for (var i = 0, len = ogKeys.length; i < len; i++) {
-		db.items.findOne({where:{itemId:ogKeys[i]}}).then(foundItem){
-			if (!foundItem){
-				items[ogKeys[i]] = itemsOG[ogKeys[i]]
+
+		var itemExistsInDb = false
+
+		for (var j = 0, len = dbItems.length; j < len; j ++){
+
+			if (dbItems[j].dataValues.itemId == ogKeys[i]){
+				itemExistsInDb = true
 			}
+
 		}
+
+		if (!itemExistsinDb){
+				items[ogKeys[i]] = itemsOG[ogKeys[i]]
+			} else {
+
+				items[ogKeys[i]] = dbItems
+			}
+
 	}
 
 	for (var i = 0, len = dbItems.length; i < len; i++) {
@@ -31,10 +51,9 @@ db.items.findAll().then(function(dbItems){
 		allItems[i] = dbItems[i].dataValues.itemId
 
 		if(dbItems[i].dataValues.mats !== 'undefined'){
+			
 			costKeys.push(dbItems[i].dataValues.itemId)
 		}
-
-
 
 		items[dbItems[i].dataValues.itemId] = {
 			"itemName":dbItems[i].dataValues.itemName,
@@ -49,16 +68,7 @@ db.items.findAll().then(function(dbItems){
 
 	})
 
-
-
-
-var maxRoiKey = ""
-var maxProfitKey = ""
-
-exports.pullData = function(){
-
-return new Promise(function(resolve,reject){
-
+/////////////////////////
 ahurl().then(function(dataURLRes){
 
 	return ahData(dataURLRes.files[0].url)
@@ -93,7 +103,10 @@ ahurl().then(function(dataURLRes){
 
  })
 
-}
+
+
+}//end of promise
+
 
 )}
 
