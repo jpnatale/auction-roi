@@ -93,7 +93,7 @@ if (allItems.length>0){
 					'costToMake' : itemsOG[item].costToMake,
 					'profit' : itemsOG[item].profit,
 					'roi' : itemsOG[item].roi,
-					'mats' : String(itemsOG[item].mats)
+					'mats' : JSON.stringify(itemsOG[item].mats)
 				}
 
 						db.items.create(body).then(function(item){
@@ -127,7 +127,7 @@ console.log("Updating Database:")
 					'costToMake' : allData[item].costToMake,
 					'profit' : allData[item].profit,
 					'roi' : allData[item].roi,
-					'mats' : String(allData[item].mats)
+					'mats' : JSON.stringify(allData[item].mats)
 				},
 				{where: {
 					itemId:item
