@@ -9,10 +9,15 @@ var db = require('./db.js')
 
 var allItems = []
 var costKeys = []
-var items = {}
+var items = itemsOG
 
 var ogKeys = Object.keys(itemsOG)
-
+allItems = ogKeys
+for (var i = 0, len = allItems.length; i < len; i++){
+	if (itemsOG[allItems[i]].hasOwnProperty('mats')){
+		costKeys.push(allItems[i])
+	}
+}
 
 var maxRoiKey = ""
 var maxProfitKey = ""
@@ -23,50 +28,86 @@ return new Promise(function(resolve,reject){
 
 /////////////////////////
 
-db.items.findAll().then(function(dbItems){
+// db.items.findAll().then(function(dbItems){
 
-	for (var i = 0, len = ogKeys.length; i < len; i++) {
 
-		var itemExistsInDb = false
 
-		for (var j = 0, len = dbItems.length; j < len; j ++){
+// 	for (var i = 0, len = dbItems.length; i < len; i++) {
 
-			if (dbItems[j].dataValues.itemId == ogKeys[i]){
-				itemExistsInDb = true
-			}
 
-		}
 
-		if (!itemExistsinDb){
-				items[ogKeys[i]] = itemsOG[ogKeys[i]]
-			} else {
 
-				items[ogKeys[i]] = dbItems
-			}
+// 		items[dbItems[i].dataValues.itemId] = {
+// 			"itemName":dbItems[i].dataValues.itemName,
+// 			"costToBuy":dbItems[i].dataValues.costToBuy,
+// 			"costToMake":dbItems[i].dataValues.costToMake,
+// 			"profit":dbItems[i].dataValues.profit,
+// 			"roi":dbItems[i].dataValues.roi,
+// 			"mats":dbItems[i].dataValues.mats,
+// 			"isBestProfit":dbItems[i].dataValues.isBestProfit,
+// 			"isBestRoi":dbItems[i].dataValues.isBestRoi}
+// 		}
 
-	}
+// 		return items
+// }).then(function(items){
 
-	for (var i = 0, len = dbItems.length; i < len; i++) {
+// allItems = Object.keys(items)
 
-		allItems[i] = dbItems[i].dataValues.itemId
+// for (var i = 0, len = allItems.length; i < len; i++) {
 
-		if(dbItems[i].dataValues.mats !== 'undefined'){
+// 		if(items[allItems[i]].hasOwnProperty('mats')){
+// 			costKeys.push(allItems[i])
+// 		}
+// }
+
+// }).then(function(){
+
+//////////
+
+
+
+
+////////////
+	// 	var itemExistsInDb = false
+
+	// 	for (var j = 0, len = dbItems.length; j < len; j ++){
+
+	// 		if (dbItems[j].dataValues.itemId == ogKeys[i]){
+	// 			itemExistsInDb = true
+	// 		}
+
+	// 	}
+
+	// 	if (!itemExistsinDb){
+	// 			items[ogKeys[i]] = itemsOG[ogKeys[i]]
+	// 		} else {
+
+	// 			items[ogKeys[i]] = dbItems
+	// 		}
+
+	// }
+
+	// for (var i = 0, len = dbItems.length; i < len; i++) {
+
+	// 	allItems[i] = dbItems[i].dataValues.itemId
+
+	// 	if(dbItems[i].dataValues.mats !== 'undefined'){
 			
-			costKeys.push(dbItems[i].dataValues.itemId)
-		}
+	// 		costKeys.push(dbItems[i].dataValues.itemId)
+	// 	}
 
-		items[dbItems[i].dataValues.itemId] = {
-			"itemName":dbItems[i].dataValues.itemName,
-			"costToBuy":dbItems[i].dataValues.costToBuy,
-			"costToMake":dbItems[i].dataValues.costToMake,
-			"profit":dbItems[i].dataValues.profit,
-			"roi":dbItems[i].dataValues.roi,
-			"mats":dbItems[i].dataValues.mats,
-			"isBestProfit":dbItems[i].dataValues.isBestProfit,
-			"isBestRoi":dbItems[i].dataValues.isBestRoi}
-		}
+	// 	items[dbItems[i].dataValues.itemId] = {
+	// 		"itemName":dbItems[i].dataValues.itemName,
+	// 		"costToBuy":dbItems[i].dataValues.costToBuy,
+	// 		"costToMake":dbItems[i].dataValues.costToMake,
+	// 		"profit":dbItems[i].dataValues.profit,
+	// 		"roi":dbItems[i].dataValues.roi,
+	// 		"mats":dbItems[i].dataValues.mats,
+	// 		"isBestProfit":dbItems[i].dataValues.isBestProfit,
+	// 		"isBestRoi":dbItems[i].dataValues.isBestRoi}
+	// 	}
 
-	})
+	// })
 
 /////////////////////////
 ahurl().then(function(dataURLRes){
@@ -103,7 +144,7 @@ ahurl().then(function(dataURLRes){
 
  })
 
-
+//})
 
 }//end of promise
 
