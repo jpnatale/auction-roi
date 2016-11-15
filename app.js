@@ -1,19 +1,57 @@
 var ahurl = require("./AHURL.js")
 var ahData = require("./AHData.js")
-var items = require("./items.js")()
+var itemsOG = require("./items.js")()
 
 var express = require('express')
 var app = express()
 var PORT = process.env.PORT || 3000
+var db = require('./db.js')
 
+var allItems = []
 var costKeys = []
-var allItems = Object.keys(items)
+var items = {}
 
-for (var i = 0, len = allItems.length; i < len; i++) {
-  if (items[allItems[i]].hasOwnProperty("mats")){
-  	costKeys.push(allItems[i])
-  }
-}
+var ogKeys = Object.keys(itemsOG)
+
+
+
+
+db.items.findAll().then(function(dbItems){
+
+	for (var i = 0, len = ogKeys.length; i < len; i++) {
+		db.items.findOne({where:{itemId:ogKeys[i]}}).then(foundItem){
+			if (!foundItem){
+				items[ogKeys[i]] = itemsOG[ogKeys[i]]
+			}
+		}
+	}
+
+	for (var i = 0, len = dbItems.length; i < len; i++) {
+
+		allItems[i] = dbItems[i].dataValues.itemId
+
+		if(dbItems[i].dataValues.mats !== 'undefined'){
+			costKeys.push(dbItems[i].dataValues.itemId)
+		}
+
+
+
+		items[dbItems[i].dataValues.itemId] = {
+			"itemName":dbItems[i].dataValues.itemName,
+			"costToBuy":dbItems[i].dataValues.costToBuy,
+			"costToMake":dbItems[i].dataValues.costToMake,
+			"profit":dbItems[i].dataValues.profit,
+			"roi":dbItems[i].dataValues.roi,
+			"mats":dbItems[i].dataValues.mats,
+			"isBestProfit":dbItems[i].dataValues.isBestProfit,
+			"isBestRoi":dbItems[i].dataValues.isBestRoi}
+		}
+
+	})
+
+
+
+
 var maxRoiKey = ""
 var maxProfitKey = ""
 
