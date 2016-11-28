@@ -135,7 +135,7 @@ ahurl().then(function(dataURLRes){
  	var out = { 'allData':items,'bestChoice':
 
 
- 		{"ROI":String(items[maxRoiKey].itemName+ " - "+items[maxRoiKey].roi),"Profit":String(items[maxProfitKey].itemName+ " - "+Math.round(items[maxProfitKey].profit))}, roiBody:{roiOrProfit:'roi',itemId:maxRoiKey},profitBody:{roiOrProfit:'profit',itemId:maxProfitKey}}
+ 		{"ROI":String(items[maxRoiKey].itemName+ " - "+items[maxRoiKey].roi),"ROI Sell for":Math.round(0.95*items[maxRoiKey].costToBuy),"Profit":String(items[maxProfitKey].itemName+ " - "+Math.round(items[maxProfitKey].profit)),"Profit Sell for":Math.round(0.95*items[maxProfitKey].costToBuy)}, roiBody:{roiOrProfit:'roi',itemId:maxRoiKey},profitBody:{roiOrProfit:'profit',itemId:maxProfitKey}}
 
 
 
@@ -167,8 +167,12 @@ if(data.auctions[i].item == itemID){
 
 }}
 
-if (matches.length>1){
-matches = matches.sort( function(a,b) { return a - b; } )} else{
+
+
+
+if (matches.length>0){
+matches
+ = matches.sort( function(a,b) { return a - b; } )} else{
 	matches = "Not enough auctions available"
 }
 
