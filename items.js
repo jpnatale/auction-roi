@@ -43,19 +43,19 @@ module.exports = function(){
 					"124442":8,
 					"124440":30}},
 					//necks
-		"228409": {"itemName":"Neck: Mark of the Ancient Priestess","costToBuy":0,"costToMake":1000000,"profit":0,"roi":0,"mats":{"124442":12,
+		"141910": {"itemName":"Neck: Mark of the Ancient Priestess","costToBuy":0,"costToMake":1000000,"profit":0,"roi":0,"mats":{"124442":12,
 					"124441":12}},
-		"190892": {"itemName":"Neck: Mark of the Claw","costToBuy":0,"costToMake":1000000,"profit":0,"roi":0,"mats":{"124442":15,
+		"128551": {"itemName":"Neck: Mark of the Claw","costToBuy":0,"costToMake":1000000,"profit":0,"roi":0,"mats":{"124442":15,
 					"124441":12}},
-		"191007": {"itemName":"Neck: Mark of the Distant Army","costToBuy":0,"costToMake":1000000,"profit":0,"roi":0,"mats":{"124442":12,
+		"128552": {"itemName":"Neck: Mark of the Distant Army","costToBuy":0,"costToMake":1000000,"profit":0,"roi":0,"mats":{"124442":12,
 					"124441":12}},
-		"228402": {"itemName":"Neck: Mark of the Heavy Hide","costToBuy":0,"costToMake":1000000,"profit":0,"roi":0,"mats":{"124442":15,
+		"141908": {"itemName":"Neck: Mark of the Heavy Hide","costToBuy":0,"costToMake":1000000,"profit":0,"roi":0,"mats":{"124442":15,
 					"124441":12}},
-		"191008": {"itemName":"Neck: Mark of the Hidden Satyr","costToBuy":0,"costToMake":1000000,"profit":0,"roi":0,"mats":{"124442":12,
+		"128553": {"itemName":"Neck: Mark of the Hidden Satyr","costToBuy":0,"costToMake":1000000,"profit":0,"roi":0,"mats":{"124442":12,
 					"124441":12}},
-		"228406": {"itemName":"Neck: Mark of the Trained Soldier","costToBuy":0,"costToMake":1000000,"profit":0,"roi":0,"mats":{"124442":12,
+		"141909": {"itemName":"Neck: Mark of the Trained Soldier","costToBuy":0,"costToMake":1000000,"profit":0,"roi":0,"mats":{"124442":12,
 					"124441":12}},	
-		"190954": {"itemName":"Shoulder: Boon of the Scavenger","costToBuy":0,"costToMake":1000000,"profit":0,"roi":0,"mats":{"124441":2}}																				
+		"128554": {"itemName":"Shoulder: Boon of the Scavenger","costToBuy":0,"costToMake":1000000,"profit":0,"roi":0,"mats":{"124441":2}}																				
 
 
 
