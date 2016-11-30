@@ -55,7 +55,10 @@ module.exports = function(){
 					"124441":12}},
 		"141909": {"itemName":"Neck: Mark of the Trained Soldier","costToBuy":0,"costToMake":1000000,"profit":0,"roi":0,"mats":{"124442":12,
 					"124441":12}},	
-		"128554": {"itemName":"Shoulder: Boon of the Scavenger","costToBuy":0,"costToMake":1000000,"profit":0,"roi":0,"mats":{"124441":2}}																				
+		"128554": {"itemName":"Shoulder: Boon of the Scavenger","costToBuy":0,"costToMake":1000000,"profit":0,"roi":0,"mats":{"124441":2}},	
+		"124125": {"itemName":"Sell Obliterum via Inf. Alc. Stones","costToBuy":0,"costToMake":1000000,"profit":0,"roi":0,"mats":{"142117":20,
+					"124106":3.333,
+					"124444":.667}}																					
 
 
 
