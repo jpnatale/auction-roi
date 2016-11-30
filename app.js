@@ -140,6 +140,7 @@ ahurl().then(function(dataURLRes){
 
 
 
+
  	resolve(out)
 
  })
