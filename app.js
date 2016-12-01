@@ -26,90 +26,6 @@ exports.pullData = function(){
 
 return new Promise(function(resolve,reject){
 
-/////////////////////////
-
-// db.items.findAll().then(function(dbItems){
-
-
-
-// 	for (var i = 0, len = dbItems.length; i < len; i++) {
-
-
-
-
-// 		items[dbItems[i].dataValues.itemId] = {
-// 			"itemName":dbItems[i].dataValues.itemName,
-// 			"costToBuy":dbItems[i].dataValues.costToBuy,
-// 			"costToMake":dbItems[i].dataValues.costToMake,
-// 			"profit":dbItems[i].dataValues.profit,
-// 			"roi":dbItems[i].dataValues.roi,
-// 			"mats":dbItems[i].dataValues.mats,
-// 			"isBestProfit":dbItems[i].dataValues.isBestProfit,
-// 			"isBestRoi":dbItems[i].dataValues.isBestRoi}
-// 		}
-
-// 		return items
-// }).then(function(items){
-
-// allItems = Object.keys(items)
-
-// for (var i = 0, len = allItems.length; i < len; i++) {
-
-// 		if(items[allItems[i]].hasOwnProperty('mats')){
-// 			costKeys.push(allItems[i])
-// 		}
-// }
-
-// }).then(function(){
-
-//////////
-
-
-
-
-////////////
-	// 	var itemExistsInDb = false
-
-	// 	for (var j = 0, len = dbItems.length; j < len; j ++){
-
-	// 		if (dbItems[j].dataValues.itemId == ogKeys[i]){
-	// 			itemExistsInDb = true
-	// 		}
-
-	// 	}
-
-	// 	if (!itemExistsinDb){
-	// 			items[ogKeys[i]] = itemsOG[ogKeys[i]]
-	// 		} else {
-
-	// 			items[ogKeys[i]] = dbItems
-	// 		}
-
-	// }
-
-	// for (var i = 0, len = dbItems.length; i < len; i++) {
-
-	// 	allItems[i] = dbItems[i].dataValues.itemId
-
-	// 	if(dbItems[i].dataValues.mats !== 'undefined'){
-			
-	// 		costKeys.push(dbItems[i].dataValues.itemId)
-	// 	}
-
-	// 	items[dbItems[i].dataValues.itemId] = {
-	// 		"itemName":dbItems[i].dataValues.itemName,
-	// 		"costToBuy":dbItems[i].dataValues.costToBuy,
-	// 		"costToMake":dbItems[i].dataValues.costToMake,
-	// 		"profit":dbItems[i].dataValues.profit,
-	// 		"roi":dbItems[i].dataValues.roi,
-	// 		"mats":dbItems[i].dataValues.mats,
-	// 		"isBestProfit":dbItems[i].dataValues.isBestProfit,
-	// 		"isBestRoi":dbItems[i].dataValues.isBestRoi}
-	// 	}
-
-	// })
-
-/////////////////////////
 ahurl().then(function(dataURLRes){
 
 	return ahData(dataURLRes.files[0].url)
@@ -137,15 +53,9 @@ ahurl().then(function(dataURLRes){
 
  		{"ROI":String(items[maxRoiKey].itemName+ " - "+items[maxRoiKey].roi),"ROI Sell for":Math.round(0.95*items[maxRoiKey].costToBuy),"Profit":String(items[maxProfitKey].itemName+ " - "+Math.round(items[maxProfitKey].profit)),"Profit Sell for":Math.round(0.95*items[maxProfitKey].costToBuy)}, roiBody:{roiOrProfit:'roi',itemId:maxRoiKey},profitBody:{roiOrProfit:'profit',itemId:maxProfitKey}}
 
-
-
-
-
  	resolve(out)
 
  })
-
-//})
 
 }//end of promise
 
@@ -167,9 +77,6 @@ if(data.auctions[i].item == itemID){
 		matches.push(Math.round(unit/10000))}
 
 }}
-
-
-
 
 if (matches.length>0){
 matches
@@ -205,10 +112,7 @@ for (var i = 0, len = costKeys.length; i < len; i++) {
 
 	}
 
-
-
 var maxProfit = 0
-
 
 for (var i = 0, len = costKeys.length; i < len; i++) {
 			if(items[costKeys[i]].profit> maxProfit){
@@ -218,9 +122,6 @@ for (var i = 0, len = costKeys.length; i < len; i++) {
 		}
 
 	}
-
-
-
 }
 
 function getCost(){
@@ -244,8 +145,6 @@ function getCost(){
 
 		items[costKeys[i]].profit = Math.round(items[costKeys[i]].profit)
 
-	}
-
-	
+	}	
 
 }
