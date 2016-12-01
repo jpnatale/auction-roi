@@ -1,64 +1,32 @@
-module.exports = function (sequelize,DataTypes) {
+var mongoose = require('mongoose');
 
-
-return sequelize.define('item', {
-	itemId: {
-		type: DataTypes.STRING,
-		allowNull: false,
-		validate: {
-			len:[1,250]
-		}
-	},
-
-	itemName: {
-		type: DataTypes.STRING,
-		allowNull: false,
-		validate: {
-			len:[1,250]
-		}
-	},
-
-	costToBuy: {
-		type: DataTypes.DOUBLE,
-		allowNull: true,
-		validate: {
-			len:[1,250]
-		}
-
-	},
-
-	costToMake: {
-		type: DataTypes.DOUBLE,
-		allowNull: true,
-		validate: {
-			len:[1,250]
-		}
-	},
-
-	profit: {
-		type: DataTypes.DOUBLE,
-		allowNull: true,
-		validate: {
-			len:[1,250]
-		}
-	},
-
-	roi: {
-		type: DataTypes.DOUBLE,
-		allowNull: true,
-		validate: {
-			len:[1,250]
-		}
-	},
-
-	mats: {
-		type: DataTypes.STRING,
-		allowNull: true,
-		validate: {
-			len:[1,250]
-		}
-	}
-
-})
-
-}
+module.exports = mongoose.model('item', {
+    itemId: {
+        type: String,
+        default: ''
+    },
+    itemName: {
+    	type: String,
+    	default: ''
+    },
+    costToBuy: {
+    	type: Number,
+    	default: ''
+    },
+    costToMake: {
+    	type: Number,
+    	default: ''
+    },
+    profit: {
+    	type: Number,
+    	default: ''
+    },
+    roi: {
+    	type: Number,
+    	default: ''
+    },
+    mats: {
+    	type: String,
+    	default: ''
+    }
+});

@@ -5,7 +5,7 @@ var itemsOG = require("./items.js")()
 var express = require('express')
 var app = express()
 var PORT = process.env.PORT || 3000
-var db = require('./db.js')
+//var db = require('./db.js')
 
 var allItems = []
 var costKeys = []

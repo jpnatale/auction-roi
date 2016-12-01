@@ -1,23 +1,13 @@
-module.exports = function (sequelize,DataTypes) {
+var mongoose = require('mongoose');
 
+module.exports = mongoose.model('best', {
+    roiOrProfit: {
+        type: String,
+        default: ''
+    },
+    itemId: {
+    	type: String,
+    	default: ''
+    }
+});
 
-return sequelize.define('best', {
-	roiOrProfit: {
-		type: DataTypes.STRING,
-		allowNull: false,
-		validate: {
-			len:[1,250]
-		}
-	},
-
-	itemId: {
-		type: DataTypes.STRING,
-		allowNull: false,
-		validate: {
-			len:[1,250]
-		}
-	}
-
-})
-
-}
