@@ -14,7 +14,7 @@ var maxProfitKey = ""
 
 
 
-mongoose.connect('mongodb://localhost/auction')
+mongoose.connect('mongodb://oldjpnatale:ginger0923@ec2-184-73-108-253.compute-1.amazonaws.com:27017/dummDB')
 
 var item = require('./models/item.js');
 var best = require('./models/best.js')
