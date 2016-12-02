@@ -17,11 +17,16 @@ var database = {
 };
 var savedOut = "Data has not been pulled since the server was started"
 
+var running = false
 
 
-mongoose.connect(database.remoteUrl)
-//mongoose.connect(database.localUrl)
 
+
+
+//mongoose.connect(database.remoteUrl)
+mongoose.connect(database.localUrl)
+
+startLoop()
 
 var item = require('./models/item.js');
 var best = require('./models/best.js')
@@ -36,9 +41,13 @@ app.get('/recipes', function (req,res){
 })
 
 app.get('/best', function (req,res){
-
-	console.log("Pulling Best Choices: " + Date())
+	if(running){
+			console.log("Pulling Best Choices: " + Date())
 	res.json(savedOut)
+} else {
+	res.json("Server is not currently running")
+}
+
 	// getBestRoi().then(function(){
 	// 	getBestProfit()}).then(function(){
 
@@ -47,8 +56,18 @@ app.get('/best', function (req,res){
 	// })	
 })
 
+app.get('/start', function(req,res){
+	update()
+	startLoop()
+	res.json("Server has been started.")
+})
+app.get('/stop', function(req,res){
+	stopLoop()
+	res.json("Server has been stopped.")
+})
+
 app.get('/update', function (req, res){
-	update(res)
+	res.json(update())
 })
 
 function getBestRoi(){
@@ -85,28 +104,6 @@ function getBestProfit(){
 	})
 	})
 }
-
-// function prop(res) {
-// 	var counter = 0
-// 	for (var i = 0, len = allItems.length; i < len; i++){
-// 			item.create({
-// 				itemId : allItems[i],
-// 				itemName : itemsOG[allItems[i]].itemName,
-// 				costToBuy : itemsOG[allItems[i]].costToBuy,
-// 				costToMake : itemsOG[allItems[i]].costToMake,
-// 				profit : itemsOG[allItems[i]].profit,
-// 				roi : itemsOG[allItems[i]].roi,
-// 				mats : JSON.stringify(itemsOG[allItems[i]].mats)
-// 			}, function(err,item){
-				
-// 				if(err){res.send(err)}
-// 				counter++
-// 				if (counter == len){
-// 					getItems(res)
-// 				}
-// 			})
-// 	}
-// }
 
 function recipes(res) {
 
@@ -185,7 +182,7 @@ function getBests(res) {
 
 	})
 //})
-function update(res) {
+function update() {
 		pullData.pullData().then(function(out){
 
 		var allData = out.allData
@@ -194,7 +191,7 @@ console.log("Updating Database: " + Date())
 		allItems.forEach(function(eachItem){
 
 			item.findOne({itemId:eachItem},function (err, doc){
-				if (err){res.json(err)}
+				if (err){return err}
 
 				if (doc){
 				
@@ -256,12 +253,12 @@ console.log("Updating Database: " + Date())
 				best.findOne({roiOrProfit:'profit'},function (err,ifProfitFound){
 					if(ifProfitFound){
 						best.findOneAndUpdate({roiOrProfit:'profit'}, {$set: {'itemId':out.profitBody}}, function (err,profitItem){
-							console.log(1)
-							res.json(out.bestChoice)})
+							
+							return out.bestChoice})
 					} else {
 						best.create({'roiOrProfit':'profit','itemId':out.profitBody},function (err, createdProfit){
-							console.log(2)
-							res.json(out.bestChoice)})
+							
+							return out.bestChoice})
 					}
 				})
 
@@ -274,12 +271,12 @@ console.log("Updating Database: " + Date())
 
 					if(ifProfitFound){
 						best.findOneAndUpdate({roiOrProfit:'profit'}, {$set: {'itemId':out.profitBody}}, function (err,profitItem){
-							console.log(3)
-							res.json(out.bestChoice)})
+							
+							return out.bestChoice})
 					} else {
 						best.create(out.profitBody,function (err, createdProfit){
-							console.log(4)
-							res.json(out.bestChoice)})
+							
+							return out.bestChoice})
 					}
 				})
 			})
@@ -290,4 +287,20 @@ console.log("Updating Database: " + Date())
 
 	})
 	})
+}
+
+function run() {
+update()
+    if(running) {
+        setTimeout(run, 60000);
+    }
+}
+
+function startLoop() {
+    running = true;
+    run();
+}
+
+function stopLoop() {
+    running = false;
 }
