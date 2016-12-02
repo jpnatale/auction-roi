@@ -78,18 +78,26 @@ if(data.auctions[i].item == itemID){
 
 }}
 
-if (matches.length>0){
-matches
- = matches.sort( function(a,b) { return a - b; } )} else{
-	matches = "Not enough auctions available"
+if (matches.length>1){
+matches = matches.sort( function(a,b) { return a - b; } )} 
+
+if (matches.length<1){
+	return "No auctions available for this item"
 }
 
 var finalUnit = 0
-if(matches.length<6){
-	finalUnit = (matches[0]+matches[1])/2
-}
-else if(matches.length>5){
+
+if(matches.length>5){
 	finalUnit = Math.round((matches[0]+matches[1]+matches[2]+matches[3])/4)
+}
+else if(matches.length>3){
+	finalUnit = Math.round((matches[0]+matches[1]+matches[2]/3))
+
+} else if(matches.length>1){
+	finalUnit = Math.round((matches[0]+matches[1]/2))
+
+} else if(matches.length>0){
+	finalUnit = Math.round((matches[0]))
 
 }
 

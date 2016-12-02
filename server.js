@@ -194,9 +194,12 @@ console.log("Updating Database: " + Date())
 				if (err){return err}
 
 				if (doc){
-				
-					if(doc.mats){
-					item.findOneAndUpdate({itemId:eachItem}, { $set: {
+
+
+					
+						if(doc.mats){
+							if(isNaN(doc.costToBuy)){allData[eachItem].costToBuy = 0}
+						item.findOneAndUpdate({itemId:eachItem}, { $set: {
 						'itemId' : eachItem,
 						'itemName' : allData[eachItem].itemName,
 						'costToBuy' : allData[eachItem].costToBuy,
@@ -208,11 +211,15 @@ console.log("Updating Database: " + Date())
 					{new: true},
 					function (err, dbItem){
 						if(err){
-        				console.log("Something wrong when updating data!");
+        				console.log("Something wrong when updating data for item " + eachItem);
         				console.log(err)
     						}
-						})					
+						})	
+
+
+
 					} else {
+						if(isNaN(doc.costToBuy)){allData[eachItem].costToBuy = 100000}
 						item.findOneAndUpdate({itemId:eachItem}, { $set: {
 						'itemId' : eachItem,
 						'itemName' : allData[eachItem].itemName,
@@ -226,6 +233,10 @@ console.log("Updating Database: " + Date())
     						}
 						})
 					}
+
+
+
+
 				} else {
 
 
