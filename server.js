@@ -66,7 +66,8 @@ app.get('/stop', function(req,res){
 })
 
 app.get('/update', function (req, res){
-	update().then(function(updateOut){res.json(updateOut)}
+	update()
+	res.json("Server manually updated.")
 })
 
 function getBestRoi(){
@@ -183,7 +184,7 @@ function getBests(res) {
 //})
 function update() {
 
-return new Promise(function(resolve,reject){
+
 
 		pullData.pullData().then(function(out){
 
@@ -193,7 +194,7 @@ console.log("Updating Database: " + String(Date()).substring(16,25))
 		allItems.forEach(function(eachItem){
 
 			item.findOne({itemId:eachItem},function (err, doc){
-				if (err){resolve(err)}
+				if (err){return err}
 
 				if (doc){
 
@@ -267,11 +268,11 @@ console.log("Updating Database: " + String(Date()).substring(16,25))
 					if(ifProfitFound){
 						best.findOneAndUpdate({roiOrProfit:'profit'}, {$set: {'itemId':out.profitBody}}, function (err,profitItem){
 							
-							resolve(savedOut)})
+							return savedOut})
 					} else {
 						best.create({'roiOrProfit':'profit','itemId':out.profitBody},function (err, createdProfit){
 							
-							resolve(savedOut)})
+							return savedOut})
 					}
 				})
 
@@ -285,11 +286,11 @@ console.log("Updating Database: " + String(Date()).substring(16,25))
 					if(ifProfitFound){
 						best.findOneAndUpdate({roiOrProfit:'profit'}, {$set: {'itemId':out.profitBody}}, function (err,profitItem){
 							
-							resolve(savedOut)})
+							return savedOut})
 					} else {
 						best.create(out.profitBody,function (err, createdProfit){
 							
-							resolve(savedOut)})
+							return savedOut})
 					}
 				})
 			})
