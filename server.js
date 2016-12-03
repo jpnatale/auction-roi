@@ -57,7 +57,7 @@ app.get('/best', function (req,res){
 })
 
 app.get('/start', function(req,res){
-	//update()
+	update()
 	startLoop()
 	res.json("Server has been started.")
 })
@@ -67,7 +67,7 @@ app.get('/stop', function(req,res){
 })
 
 app.get('/update', function (req, res){
-	update(res)
+	res.json(update())
 })
 
 function getBestRoi(){
@@ -182,7 +182,7 @@ function getBests(res) {
 
 	})
 //})
-function update(res) {
+function update() {
 		pullData.pullData().then(function(out){
 
 		var allData = out.allData
@@ -191,7 +191,7 @@ console.log("Updating Database: " + String(Date()).substring(16,25))
 		allItems.forEach(function(eachItem){
 
 			item.findOne({itemId:eachItem},function (err, doc){
-				if (err){res.json( err)}
+				if (err){return err}
 
 				if (doc){
 
@@ -265,11 +265,11 @@ console.log("Updating Database: " + String(Date()).substring(16,25))
 					if(ifProfitFound){
 						best.findOneAndUpdate({roiOrProfit:'profit'}, {$set: {'itemId':out.profitBody}}, function (err,profitItem){
 							
-							res.json(savedOut)})
+							return savedOut})
 					} else {
 						best.create({'roiOrProfit':'profit','itemId':out.profitBody},function (err, createdProfit){
 							
-							res.json(savedOut)})
+							return savedOut})
 					}
 				})
 
@@ -283,11 +283,11 @@ console.log("Updating Database: " + String(Date()).substring(16,25))
 					if(ifProfitFound){
 						best.findOneAndUpdate({roiOrProfit:'profit'}, {$set: {'itemId':out.profitBody}}, function (err,profitItem){
 							
-							res.json(savedOut)})
+							return savedOut})
 					} else {
 						best.create(out.profitBody,function (err, createdProfit){
 							
-							res.json(savedOut)})
+							return savedOut})
 					}
 				})
 			})
