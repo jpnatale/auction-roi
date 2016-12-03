@@ -17,7 +17,7 @@ var database = {
 };
 var savedOut = "Data has not been pulled since the server was started"
 
-var running = true
+var running = false
 
 
 
@@ -26,7 +26,7 @@ var running = true
 mongoose.connect(database.remoteUrl)
 //mongoose.connect(database.localUrl)
 
-//startLoop()
+startLoop()
 
 var item = require('./models/item.js');
 var best = require('./models/best.js')
@@ -186,8 +186,8 @@ function update(res) {
 		pullData.pullData().then(function(out){
 
 		var allData = out.allData
-		savedOut = out.bestChoice
-console.log("Updating Database: " + Date())
+		savedOut = out.bestChoice + ' This information was updated at: ' + String(Date()).substring(16,25)
+console.log("Updating Database: " + String(Date()).substring(16,25))
 		allItems.forEach(function(eachItem){
 
 			item.findOne({itemId:eachItem},function (err, doc){
@@ -265,11 +265,11 @@ console.log("Updating Database: " + Date())
 					if(ifProfitFound){
 						best.findOneAndUpdate({roiOrProfit:'profit'}, {$set: {'itemId':out.profitBody}}, function (err,profitItem){
 							
-							res.json(out.bestChoice)})
+							res.json(savedOut)})
 					} else {
 						best.create({'roiOrProfit':'profit','itemId':out.profitBody},function (err, createdProfit){
 							
-							res.json(out.bestChoice)})
+							res.json(savedOut)})
 					}
 				})
 
@@ -283,11 +283,11 @@ console.log("Updating Database: " + Date())
 					if(ifProfitFound){
 						best.findOneAndUpdate({roiOrProfit:'profit'}, {$set: {'itemId':out.profitBody}}, function (err,profitItem){
 							
-							res.json( out.bestChoice)})
+							res.json(savedOut)})
 					} else {
 						best.create(out.profitBody,function (err, createdProfit){
 							
-							res.json(out.bestChoice)})
+							res.json(savedOut)})
 					}
 				})
 			})
