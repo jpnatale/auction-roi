@@ -23,8 +23,8 @@ var running = true
 
 
 
-//mongoose.connect(database.remoteUrl)
-mongoose.connect(database.localUrl)
+mongoose.connect(database.remoteUrl)
+//mongoose.connect(database.localUrl)
 
 //startLoop()
 
