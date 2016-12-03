@@ -17,7 +17,7 @@ var database = {
 };
 var savedOut = "Data has not been pulled since the server was started"
 
-var running = false
+var running = true
 
 
 
@@ -26,7 +26,7 @@ var running = false
 //mongoose.connect(database.remoteUrl)
 mongoose.connect(database.localUrl)
 
-startLoop()
+//startLoop()
 
 var item = require('./models/item.js');
 var best = require('./models/best.js')
@@ -57,7 +57,7 @@ app.get('/best', function (req,res){
 })
 
 app.get('/start', function(req,res){
-	update()
+	//update()
 	startLoop()
 	res.json("Server has been started.")
 })
@@ -67,7 +67,7 @@ app.get('/stop', function(req,res){
 })
 
 app.get('/update', function (req, res){
-	res.json(update())
+	update(res)
 })
 
 function getBestRoi(){
@@ -78,7 +78,7 @@ function getBestRoi(){
 			if (bestRoiItemId){
 	
 			maxRoiKey = bestRoiItemId.itemId
-			console.log(maxRoiKey)
+			
 			item.findOne({itemId:maxRoiKey}, function(err,foundItem){
 				maxRoiItem = foundItem
 				resolve()
@@ -182,7 +182,7 @@ function getBests(res) {
 
 	})
 //})
-function update() {
+function update(res) {
 		pullData.pullData().then(function(out){
 
 		var allData = out.allData
@@ -191,14 +191,14 @@ console.log("Updating Database: " + Date())
 		allItems.forEach(function(eachItem){
 
 			item.findOne({itemId:eachItem},function (err, doc){
-				if (err){return err}
+				if (err){res.json( err)}
 
 				if (doc){
 
 
 					
 						if(doc.mats){
-							if(isNaN(doc.costToBuy)){allData[eachItem].costToBuy = 0}
+							//if(isNaN(allData[eachItem].costToBuy)) {allData[eachItem].costToBuy = 0}
 						item.findOneAndUpdate({itemId:eachItem}, { $set: {
 						'itemId' : eachItem,
 						'itemName' : allData[eachItem].itemName,
@@ -219,7 +219,7 @@ console.log("Updating Database: " + Date())
 
 
 					} else {
-						if(isNaN(doc.costToBuy)){allData[eachItem].costToBuy = 100000}
+						//if(isNaN(allData[eachItem].costToBuy)){allData[eachItem].costToBuy = 100000}
 						item.findOneAndUpdate({itemId:eachItem}, { $set: {
 						'itemId' : eachItem,
 						'itemName' : allData[eachItem].itemName,
@@ -265,11 +265,11 @@ console.log("Updating Database: " + Date())
 					if(ifProfitFound){
 						best.findOneAndUpdate({roiOrProfit:'profit'}, {$set: {'itemId':out.profitBody}}, function (err,profitItem){
 							
-							return out.bestChoice})
+							res.json(out.bestChoice)})
 					} else {
 						best.create({'roiOrProfit':'profit','itemId':out.profitBody},function (err, createdProfit){
 							
-							return out.bestChoice})
+							res.json(out.bestChoice)})
 					}
 				})
 
@@ -283,11 +283,11 @@ console.log("Updating Database: " + Date())
 					if(ifProfitFound){
 						best.findOneAndUpdate({roiOrProfit:'profit'}, {$set: {'itemId':out.profitBody}}, function (err,profitItem){
 							
-							return out.bestChoice})
+							res.json( out.bestChoice)})
 					} else {
 						best.create(out.profitBody,function (err, createdProfit){
 							
-							return out.bestChoice})
+							res.json(out.bestChoice)})
 					}
 				})
 			})

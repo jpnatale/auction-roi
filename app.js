@@ -2,11 +2,6 @@ var ahurl = require("./AHURL.js")
 var ahData = require("./AHData.js")
 var itemsOG = require("./items.js")()
 
-var express = require('express')
-var app = express()
-var PORT = process.env.PORT || 3000
-//var db = require('./db.js')
-
 var allItems = []
 var costKeys = []
 var items = itemsOG
@@ -70,35 +65,32 @@ var matches = []
 for (var i = 0, len = data.auctions.length; i < len; i++) {
   
 if(data.auctions[i].item == itemID){
+
 	var unit = data.auctions[i].buyout/data.auctions[i].quantity
-
 	if (unit>0){
-
 		matches.push(Math.round(unit/10000))}
+	}
 
-}}
-
-if (matches.length>1){
-matches = matches.sort( function(a,b) { return a - b; } )} 
-
-if (matches.length<1){
-	return "No auctions available for this item"
 }
+//console.log("Matches length: " + matches.length + " for item " +itemID + " - " +items[itemID].itemName)
+if (matches.length>0){
+matches = matches.sort( function(a,b) { return a - b; } )
+//console.log(matches.length)
+} else{
+	console.log("ZERO AUCTIONS for Item " + itemID + " - " + items[itemID].itemName)
+	return 0
+} 		
+// console.log(items[itemID].itemName)
+// console.log(matches)
+// console.log(items[itemID].itemName)
 
-var finalUnit = 0
-
-if(matches.length>5){
-	finalUnit = Math.round((matches[0]+matches[1]+matches[2]+matches[3])/4)
-}
-else if(matches.length>3){
-	finalUnit = Math.round((matches[0]+matches[1]+matches[2]/3))
-
-} else if(matches.length>1){
-	finalUnit = Math.round((matches[0]+matches[1]/2))
-
-} else if(matches.length>0){
-	finalUnit = Math.round((matches[0]))
-
+var finalUnit = 1000000
+if (matches.length>10){
+	finalUnit = Math.round((matches[0]+matches[1]+matches[2])/3)
+} else if (matches.length > 3) {
+	finalUnit = Math.round((matches[0]+matches[1])/2)
+} else {
+	finalUnit = Math.round(matches[0])
 }
 
 return finalUnit
