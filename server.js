@@ -11,6 +11,7 @@ var maxRoiItem = {}
 var maxProfitItem = {}
 var maxRoiKey = ""
 var maxProfitKey = ""
+var util = require('util')
 var database = {
     remoteUrl : 'mongodb://oldjpnatale:ginger0923@ec2-184-73-108-253.compute-1.amazonaws.com:27017/dummDB',
     localUrl: 'mongodb://localhost:27017/dummDB'
@@ -18,14 +19,14 @@ var database = {
 var savedOut = "Data has not been pulled since the server was started"
 
 var running = false
-var count = 0
+var timeUpdated = ""
 
 
 
 
 
-mongoose.connect(database.remoteUrl)
-//mongoose.connect(database.localUrl)
+//mongoose.connect(database.remoteUrl)
+mongoose.connect(database.localUrl)
 
 startLoop()
 //myCount()
@@ -44,7 +45,8 @@ app.get('/recipes', function (req,res){
 
 app.get('/best', function (req,res){
 	if(running){
-			console.log("Pulling Best Choices: " + getTime())
+		updateTime()
+			console.log("Pulling Best Choices: " + timeUpdated)
 	res.json(savedOut)
 } else {
 	res.json("Server is not currently running")
@@ -69,6 +71,7 @@ app.get('/stop', function(req,res){
 
 app.get('/update', function (req, res){
 	update()
+	running = true
 	res.json("Server manually updated.")
 })
 
@@ -184,20 +187,18 @@ function getBests(res) {
 
 	})
 //})
-
-function getTime () {
-	return String(Date()).substring(16,25)
-
+function updateTime(){
+	timeUpdated = String(Date()).substring(16,25)
 }
 function update() {
 
-
-
 		pullData.pullData().then(function(out){
 
+updateTime()
+var outString = util.inspect(out.bestChoice, {showHidden: false, depth: null})
 
 		var allData = out.allData
-		savedOut = out.bestChoice.stringify() + ' This information was updated at: ' + getTime()
+		savedOut = outString + ' This information was updated at: ' + timeUpdated
 console.log("Success! Updating Database: " + String(Date()).substring(16,25))
 		allItems.forEach(function(eachItem){
 
@@ -265,8 +266,8 @@ console.log("Success! Updating Database: " + String(Date()).substring(16,25))
 				}
 			})//item.findone
 		})
-
-		console.log("Updating Best Choices: " + getTime())
+updateTime()
+		console.log("Updating Best Choices: " + timeUpdated)
 
 	best.findOne({roiOrProfit:'roi'},function (err,ifRoiFound){
 		if(ifRoiFound){
@@ -310,22 +311,19 @@ console.log("Success! Updating Database: " + String(Date()).substring(16,25))
 	})//best.findone
 	})//pulled
 
-
 }
 
-function myCount(){
-count = count+5
-	console.log(count)
-	setTimeout(myCount,5000)
-}
 function run() {
 
 update()
 	var timeWait = 60000
-	console.log("Waiting "+timeWait/1000+" seconds...)")
+	console.log("Waiting "+timeWait/1000+" seconds...")
 	    if(running) {
         setTimeout(run, timeWait);
     }
+
+
+
 }
 
 function startLoop() {
