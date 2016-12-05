@@ -18,6 +18,7 @@ var database = {
 var savedOut = "Data has not been pulled since the server was started"
 
 var running = false
+var count = 0
 
 
 
@@ -27,6 +28,7 @@ mongoose.connect(database.remoteUrl)
 //mongoose.connect(database.localUrl)
 
 startLoop()
+//myCount()
 
 var item = require('./models/item.js');
 var best = require('./models/best.js')
@@ -42,7 +44,7 @@ app.get('/recipes', function (req,res){
 
 app.get('/best', function (req,res){
 	if(running){
-			console.log("Pulling Best Choices: " + Date())
+			console.log("Pulling Best Choices: " + getTime())
 	res.json(savedOut)
 } else {
 	res.json("Server is not currently running")
@@ -182,19 +184,25 @@ function getBests(res) {
 
 	})
 //})
-function update() {
 
+function getTime () {
+	return String(Date()).substring(16,25)
+
+}
+function update() {
+	return new Promise(function(resolve,reject){
 
 
 		pullData.pullData().then(function(out){
 
+
 		var allData = out.allData
-		savedOut = out.bestChoice + ' This information was updated at: ' + String(Date()).substring(16,25)
-console.log("Updating Database: " + String(Date()).substring(16,25))
+		savedOut = out.bestChoice.stringify() + ' This information was updated at: ' + getTime()
+console.log("Success! Updating Database: " + String(Date()).substring(16,25))
 		allItems.forEach(function(eachItem){
 
 			item.findOne({itemId:eachItem},function (err, doc){
-				if (err){return err}
+				if (err){resolve(err)}
 
 				if (doc){
 
@@ -255,10 +263,10 @@ console.log("Updating Database: " + String(Date()).substring(16,25))
 									console.log("created new item")
 								})
 				}
-			})
+			})//item.findone
 		})
 
-		console.log("Updating Best Choices: " + Date())
+		console.log("Updating Best Choices: " + getTime())
 
 	best.findOne({roiOrProfit:'roi'},function (err,ifRoiFound){
 		if(ifRoiFound){
@@ -268,11 +276,11 @@ console.log("Updating Database: " + String(Date()).substring(16,25))
 					if(ifProfitFound){
 						best.findOneAndUpdate({roiOrProfit:'profit'}, {$set: {'itemId':out.profitBody}}, function (err,profitItem){
 							
-							return savedOut})
+							resolve(savedOut)})
 					} else {
 						best.create({'roiOrProfit':'profit','itemId':out.profitBody},function (err, createdProfit){
 							
-							return savedOut})
+							resolve(savedOut)})
 					}
 				})
 
@@ -286,11 +294,11 @@ console.log("Updating Database: " + String(Date()).substring(16,25))
 					if(ifProfitFound){
 						best.findOneAndUpdate({roiOrProfit:'profit'}, {$set: {'itemId':out.profitBody}}, function (err,profitItem){
 							
-							return savedOut})
+							resolve(savedOut)})
 					} else {
 						best.create(out.profitBody,function (err, createdProfit){
 							
-							return savedOut})
+							resolve(savedOut)})
 					}
 				})
 			})
@@ -299,16 +307,27 @@ console.log("Updating Database: " + String(Date()).substring(16,25))
 
 
 
-	})
-	})
+	})//best.findone
+	})//pulled
+
 })
 }
 
+function myCount(){
+count = count+5
+	console.log(count)
+	setTimeout(myCount,5000)
+}
 function run() {
-update()
-    if(running) {
-        setTimeout(run, 60000);
+
+update().then(function(output){
+	var timeWait = 300000
+	console.log("Waiting "+timeWait/1000+" seconds...)")
+	    if(running) {
+        setTimeout(run, timeWait);
     }
+})
+
 }
 
 function startLoop() {

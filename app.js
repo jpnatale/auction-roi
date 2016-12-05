@@ -20,12 +20,15 @@ var maxProfitKey = ""
 exports.pullData = function(){
 
 return new Promise(function(resolve,reject){
+	console.log("Attempting to pull AH data...")
 
 ahurl().then(function(dataURLRes){
+
 
 	return ahData(dataURLRes.files[0].url)
 
 }).then(function(data){
+
 
 	for (var i = 0, len = allItems.length; i < len; i++) {
 
