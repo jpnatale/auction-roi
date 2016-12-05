@@ -25,7 +25,7 @@ var timeUpdated = ""
 
 
 
-mongoose.connect(database.remoteUrl)
+mongoose.connect('mongodb://oldjpnatale:ginger0923@ec2-184-73-108-253.compute-1.amazonaws.com:27017/dummDB')
 //mongoose.connect(database.localUrl)
 
 startLoop()
