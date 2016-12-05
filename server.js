@@ -25,8 +25,8 @@ var timeUpdated = ""
 
 
 
-//mongoose.connect(database.remoteUrl)
-mongoose.connect(database.localUrl)
+mongoose.connect(database.remoteUrl)
+//mongoose.connect(database.localUrl)
 
 startLoop()
 //myCount()
@@ -317,7 +317,7 @@ function run() {
 
 update()
 	var timeWait = 60000
-	console.log("Waiting "+timeWait/1000+" seconds...")
+	console.log("Waiting "+timeWait/1000+" seconds then pulling data again...")
 	    if(running) {
         setTimeout(run, timeWait);
     }
