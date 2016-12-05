@@ -34,9 +34,15 @@ startLoop()
 var item = require('./models/item.js');
 var best = require('./models/best.js')
 var itemsToCheck = require('./models/itemsToCheck.js')
+var record = require('./models/record.js')
 
 app.get('/', function (req,res){
 	getItems(res)
+})
+
+
+app.get('/track', function (req, res){
+
 })
 
 app.get('/recipes', function (req,res){
@@ -180,6 +186,9 @@ function getBests(res) {
 };
 
 //db.sequelize.sync().then(function(){
+app.get('/*', function (req,res){
+	getItems(res)
+})
 
 		app.listen(PORT, function(){
 
@@ -190,16 +199,31 @@ function getBests(res) {
 function updateTime(){
 	timeUpdated = String(Date()).substring(16,25)
 }
+
+function track(allData){
+
+	allData.forEach(function(eachItem){
+		
+	})
+
+
+}
+
+
+
+
 function update() {
 
 		pullData.pullData().then(function(out){
-
 updateTime()
 var outString = util.inspect(out.bestChoice, {showHidden: false, depth: null})
 
 		var allData = out.allData
 		savedOut = outString + ' This information was updated at: ' + timeUpdated
 console.log("Success! Updating Database: " + String(Date()).substring(16,25))
+
+
+
 		allItems.forEach(function(eachItem){
 
 			item.findOne({itemId:eachItem},function (err, doc){
