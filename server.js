@@ -190,7 +190,7 @@ function getTime () {
 
 }
 function update() {
-	return new Promise(function(resolve,reject){
+
 
 
 		pullData.pullData().then(function(out){
@@ -202,7 +202,7 @@ console.log("Success! Updating Database: " + String(Date()).substring(16,25))
 		allItems.forEach(function(eachItem){
 
 			item.findOne({itemId:eachItem},function (err, doc){
-				if (err){resolve(err)}
+				if (err){return err}
 
 				if (doc){
 
@@ -276,11 +276,11 @@ console.log("Success! Updating Database: " + String(Date()).substring(16,25))
 					if(ifProfitFound){
 						best.findOneAndUpdate({roiOrProfit:'profit'}, {$set: {'itemId':out.profitBody}}, function (err,profitItem){
 							
-							resolve(savedOut)})
+							return savedOut})
 					} else {
 						best.create({'roiOrProfit':'profit','itemId':out.profitBody},function (err, createdProfit){
 							
-							resolve(savedOut)})
+							return savedOut})
 					}
 				})
 
@@ -294,11 +294,11 @@ console.log("Success! Updating Database: " + String(Date()).substring(16,25))
 					if(ifProfitFound){
 						best.findOneAndUpdate({roiOrProfit:'profit'}, {$set: {'itemId':out.profitBody}}, function (err,profitItem){
 							
-							resolve(savedOut)})
+							return savedOut})
 					} else {
 						best.create(out.profitBody,function (err, createdProfit){
 							
-							resolve(savedOut)})
+							return savedOut})
 					}
 				})
 			})
@@ -310,7 +310,7 @@ console.log("Success! Updating Database: " + String(Date()).substring(16,25))
 	})//best.findone
 	})//pulled
 
-})
+
 }
 
 function myCount(){
@@ -320,14 +320,12 @@ count = count+5
 }
 function run() {
 
-update().then(function(output){
-	var timeWait = 300000
+update()
+	var timeWait = 60000
 	console.log("Waiting "+timeWait/1000+" seconds...)")
 	    if(running) {
         setTimeout(run, timeWait);
     }
-})
-
 }
 
 function startLoop() {
