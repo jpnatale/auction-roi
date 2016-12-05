@@ -1,6 +1,6 @@
 var express = require('express')
 var app = express()
-var PORT = process.env.PORT || 8080
+var PORT = 8080
 var pullData = require('./app.js')
 //var db = require('./db.js')
 var itemsOG = require('./items.js')()
