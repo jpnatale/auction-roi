@@ -199,13 +199,79 @@ app.get('/*', function (req,res){
 function updateTime(){
 	timeUpdated = String(Date()).substring(16,25)
 }
+function modHistory (newHistoryItem,oldHistory,totalHistoryRecords){
+
+oldHistory.unshift(newHistoryItem)
+
+	if (oldHistory.length!<totalHistoryRecords){
+		oldHistory.slice(0,totalHistoryRecords)
+	}
+
+return oldHistory
+}
+
+function arrayAverage(array){
+	var total = 0
+
+	for (var i = 0, len = array.length; i < len; i++) {
+	
+		total = total + array[i]
+	}
+	var average = total/array.length
+
+	return average
+	
+}
 
 function track(allData){
+return new Promise(function(resolve,reject){
 
 	allData.forEach(function(eachItem){
-		
+		item.findOne({itemId:eachItem},function (err, doc){
+			if (err){return err}
+
+			if (doc){
+				doc.currentPrices.unshift(parseInt(allData[eachItem].costToBuy,10))
+				
+				if (doc.currentPrices.length==60){
+					var averageHour = arrayAverage(doc.currentPrices)
+					doc.lastHour.unshift(averageHour)
+					if (doc.lastHour.length==24){
+						var averageDay = arrayAverage(doc.lastHour)
+						doc.lastDay.unshift(averageDay)
+						if(doc.lastDay.length=5){
+							var averageThirtyDay = arrayAverage(doc.lastDay)
+							doc.lastThirtyDay.unshift(averageThirtyDay)
+							if (doc.lastThirtyDay.length == 31){
+								doc.lastThirtyDay.slice(0,30)
+							}
+							doc.lastDay = []
+
+						}
+						doc.lastHour = []
+					}
+					doc.currentPrices = [doc.currentPrices[0]]
+				}
+				doc.save()
+				console.log(doc)
+
+			} else {
+
+					record.create({
+						'itemId' : eachItem,
+						'itemName' : allData[eachItem].itemName,
+						'currentPrices':[allData[eachItem].costToBuy]
+						'lastHour' : []
+						'lastDay' : []
+						'lastFiveDays' : []
+					})
+			}
+		})
 	})
 
+
+	
+})
 
 }
 
