@@ -9,6 +9,10 @@ module.exports = mongoose.model('record', {
     	type: String,
     	default: ''
     },
+    currentPrices: {
+        type: Mixed,
+        default: {}
+    },
     lastHour: {
     	type: Mixed,
     	default: {}
@@ -17,7 +21,7 @@ module.exports = mongoose.model('record', {
     	type: Mixed,
     	default: {}
     },
-    lastFiveDays: {
+    lastThirtyDays: {
     	type: Mixed,
     	default: {}
     }

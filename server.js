@@ -199,6 +199,7 @@ app.get('/*', function (req,res){
 function updateTime(){
 	timeUpdated = String(Date()).substring(16,25)
 }
+
 function modHistory (newHistoryItem,oldHistory,totalHistoryRecords){
 
 oldHistory.unshift(newHistoryItem)
@@ -213,11 +214,11 @@ return oldHistory
 function arrayAverage(array){
 	var total = 0
 
-	for (var i = 0, len = array.length; i < len; i++) {
+	for (var i = 1, len = array.length; i < len; i++) {
 	
 		total = total + array[i]
 	}
-	var average = total/array.length
+	var average = total/(array.length-1)
 
 	return average
 	
@@ -227,31 +228,35 @@ function track(allData){
 return new Promise(function(resolve,reject){
 
 	allData.forEach(function(eachItem){
-		item.findOne({itemId:eachItem},function (err, doc){
+		record.findOne({itemId:eachItem},function (err, doc){
 			if (err){return err}
 
 			if (doc){
 				doc.currentPrices.unshift(parseInt(allData[eachItem].costToBuy,10))
 				
-				if (doc.currentPrices.length==60){
+				if (doc.currentPrices.length==61){
 					var averageHour = arrayAverage(doc.currentPrices)
 					doc.lastHour.unshift(averageHour)
-					if (doc.lastHour.length==24){
+					if (doc.lastHour.length==25){
 						var averageDay = arrayAverage(doc.lastHour)
 						doc.lastDay.unshift(averageDay)
-						if(doc.lastDay.length=5){
-							var averageThirtyDay = arrayAverage(doc.lastDay)
-							doc.lastThirtyDay.unshift(averageThirtyDay)
-							if (doc.lastThirtyDay.length == 31){
-								doc.lastThirtyDay.slice(0,30)
+						if(doc.lastDay.length=6){
+							var averageThirtyDays = arrayAverage(doc.lastDay)
+							doc.lastThirtyDays.unshift(averageThirtyDays)
+							if (doc.lastThirtyDays.length == 31){
+								doc.lastThirtyDays.slice(0,30)
 							}
-							doc.lastDay = []
+							doc.lastDay = [doc.lastDay[0]]
 
 						}
-						doc.lastHour = []
+						doc.lastHour = [doc.lastHour[0]]
 					}
 					doc.currentPrices = [doc.currentPrices[0]]
 				}
+				doc.markModified('currentPrices')
+				doc.markModified('lastHour')
+				doc.markModified('lastDay')
+				doc.markModified('lastThirtyDays')
 				doc.save()
 				console.log(doc)
 
