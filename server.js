@@ -38,7 +38,7 @@ app.use(methodOverride());
 
 //End Web Server
 
-startLoop()
+//startLoop()
 //myCount()
 
 var item = require('./models/item.js');

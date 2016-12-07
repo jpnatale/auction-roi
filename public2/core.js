@@ -1,5 +1,5 @@
 // public/core.js
-var auctionTracker = angular.module('auctionTracker', []);
+var auction = angular.module('auctionTracker', []);
 
 function mainController($scope, $http) {
     $scope.formData = {};`
@@ -7,8 +7,8 @@ function mainController($scope, $http) {
     // when landing on the page, get all todos and show them
     $http.get('/api/track')
         .success(function(data) {
-            $scope.auctions = data;
-            console.log("Data pulled from API.");
+            $scope.records = data;
+            console.log("x")//console.log("Data pulled from API.");
         })
         .error(function(data) {
             console.log('Error: ' + data);
