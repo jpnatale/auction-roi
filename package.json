@@ -1,8 +1,8 @@
 {
   "name": "auction-roi",
   "version": "1.0.0",
-  "description": "",
-  "main": "AHData.js",
+  "description": "WoW Auction House Tracking and Efficiency Monitor",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
@@ -11,7 +11,7 @@
     "type": "git",
     "url": "git+https://github.com/jpnatale/auction-roi.git"
   },
-  "author": "",
+  "author": "thejoecoder",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/jpnatale/auction-roi/issues"
@@ -19,9 +19,12 @@
   "homepage": "https://github.com/jpnatale/auction-roi#readme",
   "dependencies": {
     "async": "^2.1.4",
+    "body-parser": "^1.15.2",
     "express": "^4.14.0",
     "forever": "^0.15.3",
+    "method-override": "^2.3.7",
     "mongoose": "^4.7.1",
+    "morgan": "^1.7.0",
     "pg": "^6.1.0",
     "pg-hstore": "^2.3.2",
     "request": "^2.78.0",

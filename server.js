@@ -3,10 +3,13 @@ var app = express()
 var PORT = 8080
 var pullData = require('./app.js')
 //var db = require('./db.js')
-var itemsOG = require('./items.js')()
+var itemsOG = require('./resources/items.js')()
 var allItems = Object.keys(itemsOG)
 var mongoose = require('mongoose')
 var async = require('async')
+var morgan = require('morgan')
+var bodyParser = require('body-parser')
+var methodOverride = require('method-override')
 var maxRoiItem = {}
 var maxProfitItem = {}
 var maxRoiKey = ""
@@ -15,18 +18,25 @@ var util = require('util')
 var database = {
     remoteUrl : 'mongodb://oldjpnatale:ginger0923@ec2-184-73-108-253.compute-1.amazonaws.com:27017/dummDB',
     localUrl: 'mongodb://localhost:27017/dummDB'
-};
+	};
 var savedOut = "Data has not been pulled since the server was started"
 
 var running = false
 var timeUpdated = ""
 
-
-
-
-
 mongoose.connect(database.remoteUrl)
 //mongoose.connect(database.localUrl)
+
+//Creating Web Server
+
+app.use(express.static(__dirname + '/public'))
+app.use(morgan('dev'));  
+app.use(bodyParser.urlencoded({'extended':'true'})); 
+app.use(bodyParser.json()); 
+app.use(bodyParser.json({ type: 'application/vnd.api+json' })); 
+app.use(methodOverride());
+
+//End Web Server
 
 startLoop()
 //myCount()
@@ -36,7 +46,7 @@ var best = require('./models/best.js')
 var itemsToCheck = require('./models/itemsToCheck.js')
 var record = require('./models/record.js')
 
-app.get('/', function (req,res){
+app.get('/api/', function (req,res){
 	getItems().then(function(items){
 		res.json(items)
 	})
@@ -44,7 +54,7 @@ app.get('/', function (req,res){
 })
 
 
-app.get('/track', function (req, res){
+app.get('/api/track', function (req, res){
 
 	record.find(function(err,records){
 				console.log("Sending back records.")
@@ -59,40 +69,49 @@ app.get('/track', function (req, res){
 
 })
 
-app.get('/recipes', function (req,res){
+app.get('/api/recipes', function (req,res){
 	recipes(res)
 })
 
-app.get('/best', function (req,res){
+app.get('/api/best', function (req,res){
 	if(running){
 		updateTime()
 			console.log("Pulling Best Choices: " + timeUpdated)
 	res.json(savedOut)
-} else {
-	res.json("Server is not currently running")
-}
+	} else {
+		res.json("Server is not currently running")
+	}
 
-	// getBestRoi().then(function(){
-	// 	getBestProfit()}).then(function(){
-
-	// 	var out = {"ROI":String(maxRoiItem.itemName+ " - "+maxRoiItem.roi),"Profit":String(maxProfitItem.itemName+ " - "+Math.round(maxProfitItem.profit))}
-	// 	res.json(out)
-	// })	
 })
 
-app.get('/start', function(req,res){
+app.get('/api/start', function(req,res){
 	startLoop()
 	res.json("Server has been started.")
 })
-app.get('/stop', function(req,res){
+app.get('/api/stop', function(req,res){
 	stopLoop()
 	res.json("Server has been stopped.")
 })
 
-app.get('/update', function (req, res){
+app.get('/api/update', function (req, res){
 	update()
 	running = true
 	res.json("Server manually updated.")
+})
+
+app.get('/api/*', function (req,res){
+	res.json(getItems())
+})
+
+app.get('/*', function (req,res){
+	res.sendfile('./public/index.html');
+})
+
+//Starting Server
+app.listen(PORT, function(){
+
+		console.log("Express server listening on port " + PORT +"!")
+
 })
 
 function getBestRoi(){
@@ -205,17 +224,6 @@ function getBests(res) {
         res.json(bests); // return all todos in JSON format
     });
 };
-
-//db.sequelize.sync().then(function(){
-app.get('/*', function (req,res){
-	res.json(getItems())
-})
-
-		app.listen(PORT, function(){
-
-		console.log("Express server listening on port " + PORT +"!")
-
-	})
 //})
 function updateTime(){
 	timeUpdated = String(Date()).substring(16,25)

@@ -1,6 +1,6 @@
-var ahurl = require("./AHURL.js")
-var ahData = require("./AHData.js")
-var itemsOG = require("./items.js")()
+var ahurl = require("./resources/AHURL.js")
+var ahData = require("./resources/AHData.js")
+var itemsOG = require("./resources/items.js")()
 
 var allItems = []
 var costKeys = []
