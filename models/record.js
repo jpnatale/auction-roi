@@ -10,19 +10,19 @@ module.exports = mongoose.model('record', {
     	default: ''
     },
     currentPrices: {
-        type: Mixed,
+        type: mongoose.Schema.Types.Mixed,
         default: {}
     },
     lastHour: {
-    	type: Mixed,
+    	type: mongoose.Schema.Types.Mixed,
     	default: {}
     },
     lastDay: {
-    	type: Mixed,
+    	type: mongoose.Schema.Types.Mixed,
     	default: {}
     },
     lastThirtyDays: {
-    	type: Mixed,
+    	type: mongoose.Schema.Types.Mixed,
     	default: {}
     }
 });

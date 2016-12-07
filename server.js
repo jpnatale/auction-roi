@@ -25,7 +25,7 @@ var timeUpdated = ""
 
 
 
-mongoose.connect('mongodb://oldjpnatale:ginger0923@ec2-184-73-108-253.compute-1.amazonaws.com:27017/dummDB')
+mongoose.connect(database.remoteUrl)
 //mongoose.connect(database.localUrl)
 
 startLoop()
@@ -37,11 +37,25 @@ var itemsToCheck = require('./models/itemsToCheck.js')
 var record = require('./models/record.js')
 
 app.get('/', function (req,res){
-	getItems(res)
+	getItems().then(function(items){
+		res.json(items)
+	})
+
 })
 
 
 app.get('/track', function (req, res){
+
+	record.find(function(err,records){
+				console.log("Sending back records.")
+				if (err) {
+		            res.json(err);
+		        } else {
+		        	res.json(records)
+		        }
+			})
+
+
 
 })
 
@@ -124,7 +138,7 @@ function recipes(res) {
 
 		itemsToCheck.findOne({itemId:eachItem}, function(err,checkedItem){
 			console.log(checkedItem)
-			if(!checkedItem){
+			if(checkedItem.length<1){
 				itemsToCheck.create(
 					{'itemId':eachItem}
 					,function(err,newItem){
@@ -147,17 +161,24 @@ function recipes(res) {
 
 
 }
-function getItems(res) {
+function getItems() {
+
+return new Promise(function(resolve,reject){
+
+
     item.find(function (err, items) {
 
         // if there is an error retrieving, send the error. nothing after res.send(err) will execute
         if (err) {
-            res.send(err);
+            resolve(err);
         } else {
 
-        res.json(items)
+        	resolve(items)
         } // return all todos in JSON format
     });
+
+})
+
 };
 
 function getItemsToCheck(res) {
@@ -187,7 +208,7 @@ function getBests(res) {
 
 //db.sequelize.sync().then(function(){
 app.get('/*', function (req,res){
-	getItems(res)
+	res.json(getItems())
 })
 
 		app.listen(PORT, function(){
@@ -204,7 +225,7 @@ function modHistory (newHistoryItem,oldHistory,totalHistoryRecords){
 
 oldHistory.unshift(newHistoryItem)
 
-	if (oldHistory.length!<totalHistoryRecords){
+	if (oldHistory.length>=totalHistoryRecords){
 		oldHistory.slice(0,totalHistoryRecords)
 	}
 
@@ -224,15 +245,16 @@ function arrayAverage(array){
 	
 }
 
-function track(allData){
+function track(currentData){
 return new Promise(function(resolve,reject){
-
-	allData.forEach(function(eachItem){
-		record.findOne({itemId:eachItem},function (err, doc){
+counter = 1
+	currentData.forEach(function(eachItem){
+		
+		record.findOne({itemId:eachItem.itemId},function (err, doc){
 			if (err){return err}
-
+			
 			if (doc){
-				doc.currentPrices.unshift(parseInt(allData[eachItem].costToBuy,10))
+				doc.currentPrices.unshift(parseInt(eachItem.costToBuy,10))
 				
 				if (doc.currentPrices.length==61){
 					var averageHour = arrayAverage(doc.currentPrices)
@@ -258,21 +280,44 @@ return new Promise(function(resolve,reject){
 				doc.markModified('lastDay')
 				doc.markModified('lastThirtyDays')
 				doc.save()
-				console.log(doc)
+				
+				if (counter == currentData.length){
+		
+					resolve('Finished creating records.')
+				} else {
+					counter++
+				}
 
 			} else {
-
+				
 					record.create({
-						'itemId' : eachItem,
-						'itemName' : allData[eachItem].itemName,
-						'currentPrices':[allData[eachItem].costToBuy]
-						'lastHour' : []
-						'lastDay' : []
-						'lastFiveDays' : []
-					})
+						'itemId' : eachItem.itemId,
+						'itemName' : eachItem.itemName,
+						'currentPrices': [eachItem.costToBuy],
+						'lastHour' : [],
+						'lastDay' : [],
+						'lastThirtyDays' : []
+					}, function (err, created){
+									console.log("Created new record for " + eachItem.itemId + " - " + eacItem.itemName + ".")
+						if (counter == currentData.length){
+		
+					resolve('Finished creating records.')
+				} else {
+					counter++
+				}
+
+								})
+
+
+
 			}
+
+
 		})
+
+
 	})
+	
 
 
 	
@@ -284,6 +329,8 @@ return new Promise(function(resolve,reject){
 
 
 function update() {
+
+return new Promise(function(resolve,reject){
 
 		pullData.pullData().then(function(out){
 updateTime()
@@ -298,7 +345,7 @@ console.log("Success! Updating Database: " + String(Date()).substring(16,25))
 		allItems.forEach(function(eachItem){
 
 			item.findOne({itemId:eachItem},function (err, doc){
-				if (err){return err}
+				if (err){resolve(err)}
 
 				if (doc){
 
@@ -372,11 +419,11 @@ updateTime()
 					if(ifProfitFound){
 						best.findOneAndUpdate({roiOrProfit:'profit'}, {$set: {'itemId':out.profitBody}}, function (err,profitItem){
 							
-							return savedOut})
+							resolve(savedOut)})
 					} else {
 						best.create({'roiOrProfit':'profit','itemId':out.profitBody},function (err, createdProfit){
 							
-							return savedOut})
+							resolve(savedOut)})
 					}
 				})
 
@@ -390,11 +437,11 @@ updateTime()
 					if(ifProfitFound){
 						best.findOneAndUpdate({roiOrProfit:'profit'}, {$set: {'itemId':out.profitBody}}, function (err,profitItem){
 							
-							return savedOut})
+							resolve(savedOut)})
 					} else {
 						best.create(out.profitBody,function (err, createdProfit){
 							
-							return savedOut})
+							resolve(savedOut)})
 					}
 				})
 			})
@@ -405,16 +452,24 @@ updateTime()
 
 	})//best.findone
 	})//pulled
-
+})
 }
 
 function run() {
 
-update()
+update().then(function(){
+	getItems().then(function(currentItems){
+		track(currentItems).then(function(){
+			console.log("Records have been updated.")
+		})
+	})
+})
 	var timeWait = 60000
-	console.log("Waiting "+timeWait/1000+" seconds then pulling data again...")
+	console.log("Will pull data again in "+timeWait/1000+" seconds.")
 	    if(running) {
-        setTimeout(run, timeWait);
+	    	
+        		setTimeout(run, timeWait);
+    		
     }
 
 

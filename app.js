@@ -20,7 +20,7 @@ var maxProfitKey = ""
 exports.pullData = function(){
 
 return new Promise(function(resolve,reject){
-	console.log("Attempting to pull AH data...")
+	console.log("Attempting to pull AH data.")
 
 ahurl().then(function(dataURLRes){
 
@@ -51,7 +51,7 @@ ahurl().then(function(dataURLRes){
 
  		{"ROI":String(items[maxRoiKey].itemName+ " - "+items[maxRoiKey].roi),"ROI Sell for":Math.round(0.95*items[maxRoiKey].costToBuy),"Profit":String(items[maxProfitKey].itemName+ " - "+Math.round(items[maxProfitKey].profit)),"Profit Sell for":Math.round(0.95*items[maxProfitKey].costToBuy)}, roiBody:{roiOrProfit:'roi',itemId:maxRoiKey},profitBody:{roiOrProfit:'profit',itemId:maxProfitKey}}
 
-console.log('Output being sent..')
+console.log('AH data being returned now.')
  	resolve(out)
 
  })
