@@ -239,7 +239,7 @@ function arrayAverage(array){
 	
 		total = total + array[i]
 	}
-	var average = total/(array.length-1)
+	var average = Math.round(total/(array.length-1))
 
 	return average
 	
