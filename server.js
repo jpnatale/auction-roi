@@ -99,6 +99,15 @@ app.get('/api/update', function (req, res){
 	res.json("Server manually updated.")
 })
 
+app.get('/api/test', function (req,res){
+
+	pullData.pullData().then(function(out){
+		res.json('done')
+	})
+
+	
+})
+
 app.get('/api/*', function (req,res){
 	res.json(getItems())
 })
