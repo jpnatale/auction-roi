@@ -24,8 +24,8 @@ var savedOut = "Data has not been pulled since the server was started"
 var running = false
 var timeUpdated = ""
 
-//mongoose.connect(database.remoteUrl)
-mongoose.connect(database.localUrl)
+mongoose.connect(database.remoteUrl)
+//mongoose.connect(database.localUrl)
 
 //Creating Web Server
 
@@ -38,7 +38,7 @@ app.use(methodOverride());
 
 //End Web Server
 
-//startLoop()
+startLoop()
 //myCount()
 
 var item = require('./models/item.js');
