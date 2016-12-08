@@ -1,13 +1,13 @@
 <!doctype html>
 
 <!-- ASSIGN OUR ANGULAR MODULE -->
-<html ng-app="scotchTodo">
+<html ng-app="auctionTracker">
 <head>
     <!-- META -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Optimize mobile viewport -->
 
-    <title>Node/Angular Todo App</title>
+    <title>Wow Auction Tracking App</title>
 
     <!-- SCROLLS -->
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"><!-- load bootstrap -->
@@ -15,66 +15,54 @@
     <style>
         html                    { overflow-y:scroll; }
         body                    { padding-top:50px; }
-        #todo-list              { margin-bottom:30px; }
-        #todo-form              { margin-bottom:50px; }
+        #auction-list              { margin-bottom:30px; }
+        #auction-form              { margin-bottom:50px; }
     </style>
 
-    <!-- SPELLS -->
-    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js"></script><!-- load angular -->
 
-    <script src="js/controllers/main.js"></script> <!-- load up our controller -->
-    <script src="js/services/todos.js"></script> <!-- load our todo service -->
-    <script src="js/core.js"></script> <!-- load our main application -->
+    <!-- SPELLS -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script><!-- load jquery -->
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script><!-- load angular -->
+    <script src="core.js"></script>
 
 </head>
-<!-- SET THE CONTROLLER -->
+<!-- SET THE CONTROLLER AND GET ALL TODOS -->
 <body ng-controller="mainController">
     <div class="container">
 
         <!-- HEADER AND TODO COUNT -->
         <div class="jumbotron text-center">
-            <h1>I'm a Todo-aholic <span class="label label-info">{{ todos.length }}</span></h1>
+            <h1>I'm a Wow Auction Tracker! <span class="label label-info">{{ records.length }}</span></h1>
         </div>
 
         <!-- TODO LIST -->
-        <div id="todo-list" class="row">
-            <div class="col-sm-4 col-sm-offset-4">
-
-                
+        <div id="auction-list" class="row">
+            <div class="col-sm-7 col-sm-offset-2">
 
                 <!-- LOOP OVER THE TODOS IN $scope.todos -->
-                <div class="checkbox" ng-repeat="todo in todos">
-                    <label>
-                        <input type="checkbox" ng-click="deleteTodo(todo._id)"> {{ todo.text }}
+                <div class="checkbox" ng-repeat="record in records">
+                    <x>
+                        <input type="checkbox" ng-click="deleteTracking(record._id)"> Item: {{record.itemName}}, Current Price: {{record.currentPrices[0]}}, 1-Hour History: {{record.lastHour[0]}}, 24-Hour History: {{record.lastDay}}.
                     </label>
                 </div>
-
-                <p class="text-center" ng-show="loading">
-                    <span class="fa fa-spinner fa-spin fa-3x"></span>
-                </p>
 
             </div>
         </div>
 
         <!-- FORM TO CREATE TODOS -->
-        <div id="todo-form" class="row">
+        <div id="auction-form" class="row">
             <div class="col-sm-8 col-sm-offset-2 text-center">
                 <form>
                     <div class="form-group">
 
                         <!-- BIND THIS VALUE TO formData.text IN ANGULAR -->
-                        <input type="text" class="form-control input-lg text-center" placeholder="I want to buy a puppy that will love me forever" ng-model="formData.text">
+                        <input type="text" class="form-control input-lg text-center" placeholder="Enter WoW ItemID for the item you want to track here" ng-model="formData.text">
                     </div>
 
                     <!-- createToDo() WILL CREATE NEW TODOS -->
-                    <button type="submit" class="btn btn-primary btn-lg" ng-click="createTodo()">Add</button>
+                    <button type="submit" class="btn btn-primary btn-lg" ng-click="createTracking()">Add</button>
                 </form>
             </div>
-        </div>
-
-        <div class="text-center text-muted">
-            <p>A demo by <a href="http://scotch.io">Scotch</a>.</p>
-            <p>Read the <a href="http://scotch.io/tutorials/javascript/creating-a-single-page-todo-app-with-node-and-angular">tutorial</a>.</p>
         </div>
 
     </div>
