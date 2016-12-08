@@ -35,13 +35,18 @@
             <h1>I'm a Wow Auction Tracker! <span class="label label-info">{{ records.length }} Records - Version: {{records[0].__v}}</span></h1>
         </div>
 
+        <div class="col-sm-8 col-sm-offset-2"><h2>The best ROI and Profit are:</h2>
+            <label>{{ best }}</label>
+        </div>
+
+
         <!-- TODO LIST -->
         <div id="auction-list" class="row">
-            <div class="col-sm-7 col-sm-offset-2">
+            <div class="col-sm-7 col-sm-offset-1e">
 
                 <!-- LOOP OVER THE TODOS IN $scope.todos -->
                 <div class="checkbox" ng-repeat="record in records">
-                    <x>
+                    <label>
                         <input type="checkbox" ng-click="deleteTracking(record._id)"> Item: {{record.itemName}}, Current Price: {{record.currentPrices[0]}}, 1-Hour History: {{record.lastHour[0]}}, 24-Hour History: {{record.lastDay}}.
                     </label>
                 </div>

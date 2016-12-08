@@ -15,6 +15,13 @@ function mainController($scope, $http) {
         .error(function(data) {
             console.log('Error: ' + data);
         });
+    $http.get('/api/best')
+        .success(function(data) {
+            $scope.best = data;
+            console.log("Bests pulled from API.")
+        }).error(function(data) {
+            console.log('Error: ' + data);
+        });
 
     // when submitting the add form, send the text to the node API
     $scope.createTracking = function() {
