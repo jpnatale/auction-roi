@@ -77,7 +77,10 @@ app.get('/api/best', function (req,res){
 	if(running){
 		updateTime()
 			console.log("Pulling Best Choices: " + timeUpdated)
-	res.json(savedOut.obj)
+	
+				res.json(savedOut.obj)
+		
+	
 	} else {
 		res.json("Server is not currently running")
 	}
