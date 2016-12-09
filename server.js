@@ -78,8 +78,8 @@ app.get('/api/best', function (req,res){
 		updateTime()
 			console.log("Pulling Best Choices: " + timeUpdated)
 	
-				res.json(savedOut.obj)
-		
+				res.json(savedOut)
+		 
 	
 	} else {
 		res.json("Server is not currently running")
@@ -354,7 +354,8 @@ return new Promise(function(resolve,reject){
 
 		pullData.pullData().then(function(out){
 updateTime()
-var outString = {'string':util.inspect(out.bestChoice, {showHidden: false, depth: null}) + ' This information was updated at: ' + timeUpdated,'obj':out.bestChoice}
+// var outString = {'string':util.inspect(out.bestChoice, {showHidden: false, depth: null}) + ' This information was updated at: ' + timeUpdated,'obj':out.bestChoice}
+var outString = {'time':timeUpdated,'obj':out.bestChoice}
 
 		var allData = out.allData
 		savedOut = outString

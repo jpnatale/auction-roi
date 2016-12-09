@@ -94,7 +94,7 @@ matches = matches.sort( function(a,b) { return a - b; } )
 var finalUnit = 1000000
 if (matches.length>10){
 	finalUnit = Math.round((matches[0]+matches[1]+matches[2])/3)
-			if(itemsOG[itemID].itemName == "Aethril"){
+			if(itemsOG[itemID].itemName == "Felwort"){
 		console.log("Aethril final unit is: "+finalUnit)
 
 
