@@ -6,7 +6,7 @@ var pullData = require('./app.js')
 var itemsOG = require('./resources/items.js')()
 var allItems = Object.keys(itemsOG)
 var mongoose = require('mongoose')
-var async = require('async')
+//var async = require('async')
 var morgan = require('morgan')
 var bodyParser = require('body-parser')
 var methodOverride = require('method-override')
@@ -24,8 +24,8 @@ var savedOut = "Data has not been pulled since the server was started"
 var running = false
 var timeUpdated = ""
 
-mongoose.connect(database.remoteUrl)
-//mongoose.connect(database.localUrl)
+//mongoose.connect(database.remoteUrl)
+mongoose.connect(database.localUrl)
 
 //Creating Web Server
 
@@ -45,12 +45,25 @@ var item = require('./models/item.js');
 var best = require('./models/best.js')
 var itemsToCheck = require('./models/itemsToCheck.js')
 var record = require('./models/record.js')
+var rabbit = require('./mdoels/rabbit.js')
+var rabbitItemsToCheck = require('/models/rabbitItemsToCheck.js')
 
 app.get('/api/', function (req,res){
 	getItems().then(function(items){
 		res.json(items)
 	})
 
+})
+
+app.get('/api/rabbit', function (req,res){
+	rabbit.find(function(err,rabbits){
+			console.log("Sending back rabbit records.")
+			if (err) {
+	            res.json(err);
+	        } else {
+	        	res.json(rabbits)
+	        }
+		})
 })
 
 
@@ -64,9 +77,6 @@ app.get('/api/track', function (req, res){
 		        	res.json(records)
 		        }
 			})
-
-
-
 })
 
 app.get('/api/recipes', function (req,res){
@@ -111,8 +121,13 @@ app.get('/api/test', function (req,res){
 	
 })
 
+
 app.get('/api/*', function (req,res){
 	res.json(getItems())
+})
+
+app.get('/rabbit', function (req,res){
+	res.sendfile('./public/rabbit.html')
 })
 
 app.get('/*', function (req,res){
@@ -212,6 +227,39 @@ return new Promise(function(resolve,reject){
 
 };
 
+function getRabbitItems() {
+
+	return new Promise(function(resolve,reject){
+		var toResolve = []
+		item.find(function (err, items) {
+
+
+        // if there is an error retrieving, send the error. nothing after res.send(err) will execute
+        if (err) {
+            resolve(err);
+        } else {
+        	rabbitItemsToCheck.find(function(err,rabbitItems){
+
+        		rabbitItems.forEach(function(rabbitItem){
+
+		        	items.forEach(function(eachItem){
+		        		if (rabbitItem.itemId == eachItem.itemId){
+		        			toResolve.push(eachItem)
+		        		}
+		        	})
+
+
+        		})
+
+        		resolve(items)
+
+        	})
+
+        } // return all todos in JSON format
+    });
+	})
+}
+
 function getItemsToCheck(res) {
     itemsToCheck.find(function (err, items) {
 
@@ -263,6 +311,102 @@ function arrayAverage(array){
 
 	return average
 	
+}
+
+function guild(currentData){
+
+	return new Promise(function(resolve,reject){
+		counter = 1
+
+		currentData.forEach(function(eachItem){
+			rabbit.findOne({itemId:eachItem.itemId},function (err,doc){
+				if (err){return err}
+
+				if (doc){
+					doc.currentPrices.unshift(parseInt(eachItem.costToBuy,10))
+
+					if (doc.currentPrices.length >=61){
+						doc.currentPrices.slice(0,60)
+					}//cut out remainder (function?)
+					doc.counters[0]++
+					if (doc.counters[0] == 60){
+						doc.counters[0] = 0
+						if(doc.currentPrices[0]<=doc.minMax.hour.min){
+							doc.minMax.hour.min = doc.currentPrices[0]
+							doc.minMax.hour.minTime = date()//min over the last hour stored if less than last 24 hour min							
+						}
+						if(doc.currentPrices<=doc.minMax.hour.max){
+							doc.minMax.hour.max = doc.currenttPrices[0]
+							doc.minMax.hour.maxTime = date()//max over the last hour stored if greater than last 24 hour min							
+						}						
+
+						doc.lastHour.unshift(arrayAverage(doc.currentPrices))
+						if (doc.lastHour.length>= 25){
+							doc.lastHour.slice(0,24)
+						}
+						doc.counters[1]++
+						if (doc.counters[1] == 24){
+							doc.counters[1] = 0
+
+							doc.minMax.day.unshift(doc.minMax.hour)
+							doc.minMax.hour = {'min':100000,'max':0}
+							if (doc.minMax.day.length>=8){
+								doc.minMax.day.slice(0,7)
+							}
+
+							doc.lastDay.unshift(arrayAverage(doc.lastHour))
+							if (doc.lastDay.length >= 8) {
+								doc.lastDay.slice(0,7)
+							} 
+							doc.counters[2]++
+							if (doc.counters[2] ==7){
+								doc.counters[2] = 0
+								doc.lastWeek.unshift(arrayAverage(doc.lastDay))
+								if (doc.lastWeek.length >=53){
+									doc.lastWeek.slice(0,52)
+								}
+							}
+						}
+					}	
+				doc.markModified('currentPrices')
+				doc.markModified('lastHour')
+				doc.markModified('lastDay')
+				doc.markModified('lastWeek')
+				doc.markModified('counters')
+				doc.markModified('minMax')
+				save()
+
+
+				} else {
+
+					rabbit.create({
+						'itemId' : eachItem.itemId,
+						'itemName' : eachItem.itemName,
+						'currentPrices': [eachItem.costToBuy],
+						'lastHour' : [],
+						'lastDay' : [],
+						'lastWeek' : [],
+						'minMax' : {'hour':{'min':100000,'max':0}},
+						'counter' : [0,0,0]
+					}, function (err, created){
+									console.log("Created new record for " + eachItem.itemId + " - " + eacItem.itemName + ".")
+						if (counter == currentData.length){
+		
+					resolve('Finished creating records.')
+				} else {
+					counter++
+				}
+
+								})
+
+				}
+
+
+			})
+
+		})
+	})
+
 }
 
 function track(currentData){
@@ -348,11 +492,11 @@ counter = 1
 
 
 
-function update() {
+function update(itemsToParse) {
 
 return new Promise(function(resolve,reject){
 
-		pullData.pullData().then(function(out){
+		pullData.pullData(itemsToParse).then(function(out){
 updateTime()
 // var outString = {'string':util.inspect(out.bestChoice, {showHidden: false, depth: null}) + ' This information was updated at: ' + timeUpdated,'obj':out.bestChoice}
 var outString = {'time':timeUpdated,'obj':out.bestChoice}
@@ -476,16 +620,60 @@ updateTime()
 })
 }
 
-function run() {
+function updateItems () {
+	
+	return new Promise(function(resolve,reject){
+		var itemsToParse = allItems
+		rabbitItemsToCheck.find(function (err,rabbitItems){
+			rabbitItems.forEach(function(eachItem){
+				var needToAdd = true
+				itemstoParse.forEach(function(eachParse){
+					if (eachParse == eachItem.itemId){
+						needToAdd = false
+					}
+				})
+				////if forEach isn't Async., rework?
+				if (needToAdd){
+					itemsToParse.push(eachItem.itemId)
+				}
+				
+			})
+		})
 
-update().then(function(){
+
+		resolve(itemsToParse)
+
+
+
+	})
+
+
+
+}
+
+
+
+function run() {
+updateItems().then(function(itemsToParse){
+update(itemsToParse).then(function(){
+
 	getItems().then(function(currentItems){
+
 		track(currentItems).then(function(){
-			console.log("Records have been updated.")
+			console.log("Full tracking been updated.")
 		})
 	})
+
+	getRabbitItems().then(function(currentItems){
+		guild(currentItems).then(function(){
+			console.log("Full guild tracking has been updated.")
+		})
+
+	})
+
 })
-	var timeWait = 60000
+})
+	var timeWait = 300000
 	console.log("Will pull data again in "+timeWait/1000+" seconds.")
 	    if(running) {
 	    	

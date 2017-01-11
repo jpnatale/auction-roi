@@ -15,7 +15,7 @@
     <style>
         html                    { overflow-y:scroll; }
         body                    { padding-top:50px; }
-        #auction-list              { margin-bottom:30px; width:75%; margin:auto; }
+        #auction-list              { margin-bottom:30px; margin:auto; }
         #auction-form              { margin-bottom:50px; }
     </style>
 
@@ -47,7 +47,7 @@
                 <!-- LOOP OVER THE TODOS IN $scope.todos -->
                 <div class="checkbox" ng-repeat="record in records">
                     <label>
-                        <input type="checkbox" ng-click="deleteTracking(record._id)"> Item: {{record.itemName}}, Current Price: {{record.currentPrices[0]}}, 1-Hour History: {{record.lastHour[1]}}, 24-Hour History: {{record.lastDay[0]}}.
+                        <!--<input type="checkbox" ng-click="deleteTracking(record._id)"> -->Item: {{record.itemName}}, Current Price: {{record.currentPrices[0]}}, 1-Hour History: {{record.lastHour[1]}}, 24-Hour History: {{record.lastDay[0]}}.
                     </label>
                 </div>
 
@@ -65,10 +65,10 @@
                     </div>
 
                     <!-- createToDo() WILL CREATE NEW TODOS -->
-                    <button type="submit" class="btn btn-primary btn-lg" ng-click="createTracking()">Add</button>
+                   <!-- <button type="submit" class="btn btn-primary btn-lg" ng-click="createTracking()">Add</button> -->
                 </form>
             </div>
-        </div>
+        </div> 
 
     </div>
 

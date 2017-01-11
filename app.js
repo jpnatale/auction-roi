@@ -1,13 +1,28 @@
 var ahurl = require("./resources/AHURL.js")
 var ahData = require("./resources/AHData.js")
 var itemsOG = require("./resources/items.js")()
+// var mongoose = require('mongoose')
+// var database = {
+//     remoteUrl : 'mongodb://oldjpnatale:ginger0923@ec2-184-73-108-253.compute-1.amazonaws.com:27017/dummDB',
+//     localUrl: 'mongodb://localhost:27017/dummDB'
+// 	};
+
+
+// mongoose.connect(database.remoteUrl)
 
 var allItems = []
 var costKeys = []
 var items = itemsOG
 
 var ogKeys = Object.keys(itemsOG)
+
+// rabbitItemsToCheck.find(function (err,doc){
+
+// }
+
 allItems = ogKeys
+
+//Need to add recipe-adding ability/checker here
 for (var i = 0, len = allItems.length; i < len; i++){
 	if (itemsOG[allItems[i]].hasOwnProperty('mats')){
 		costKeys.push(allItems[i])
@@ -17,7 +32,7 @@ for (var i = 0, len = allItems.length; i < len; i++){
 var maxRoiKey = ""
 var maxProfitKey = ""
 
-exports.pullData = function(){
+exports.pullData = function(itemsToParse){
 
 return new Promise(function(resolve,reject){
 	console.log("Attempting to pull AH data.")
@@ -30,9 +45,9 @@ ahurl().then(function(dataURLRes){
 }).then(function(data){
 
 
-	for (var i = 0, len = allItems.length; i < len; i++) {
+	for (var i = 0, len = itemsToParse.length; i < len; i++) {
 
-		items[allItems[i]].costToBuy = findUnit(data,allItems[i])
+		items[itemsToParse[i]].costToBuy = findUnit(data,itemsToParse[i])
 
 	}
 
